@@ -1,0 +1,19 @@
+version: '3'
+
+volumes:
+  allure-docker-service:
+    driver: local
+
+services:
+  allure-docker-service-ui:
+    build:
+      context: ../allure-docker-service-ui
+      dockerfile: docker-custom/Dockerfile.bionic-custom
+      #args:
+      #  ALLURE_RELEASE: "2.13.5"
+    environment:
+      ALLURE_DOCKER_API_URL: "http://localhost:5050"
+      ALLURE_DOCKER_API_URL_PREFIX: ""
+      URL_PREFIX: ""
+    ports:
+      - "5252:5252"
