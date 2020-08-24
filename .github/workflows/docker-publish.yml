@@ -1,0 +1,78 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - "*"
+
+    tags:
+      - v*
+
+  pull_request:
+
+env:
+  DOCKER_IMAGE: frankescobar/allure-docker-service-ui
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Pulling code
+        uses: actions/checkout@v2
+
+      - name: Preparing
+        id: prepare
+        run: |
+          DOCKER_PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7
+          VERSION=na
+          TAGS="--tag ${DOCKER_IMAGE}:na"
+
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+            if [[ $GITHUB_REF == *"beta"* ]]; then
+                TAGS="--tag ${DOCKER_IMAGE}:${VERSION} --tag ${DOCKER_IMAGE}:beta"
+            else
+                TAGS="--tag ${DOCKER_IMAGE}:${VERSION} --tag ${DOCKER_IMAGE}:latest"
+            fi
+          fi
+
+          echo ::set-output name=docker_image::${DOCKER_IMAGE}
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=buildx_args::--platform ${DOCKER_PLATFORMS} \
+            --build-arg VERSION=${VERSION} \
+            --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+            --build-arg VCS_REF=${GITHUB_SHA::8} \
+            ${TAGS} --file docker/Dockerfile.bionic .
+
+      - name: Setting up Docker Buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v3
+        with:
+          buildx-version: latest
+          qemu-version: latest
+
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+
+      - name: Docker Building
+        run: |
+          docker buildx build --output "type=image,push=false" ${{ steps.prepare.outputs.buildx_args }}
+
+      - name: DockerHub Login
+        if: success() && startsWith(github.ref, 'refs/tags/v')
+        uses: crazy-max/ghaction-docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASS }}
+
+      - name: Docker Publishing
+        if: success() && startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker buildx build --output "type=image,push=true" ${{ steps.prepare.outputs.buildx_args }}
+
+      - name: Inspecting image
+        if: always() && startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker buildx imagetools inspect ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}
