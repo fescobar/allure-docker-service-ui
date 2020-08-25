@@ -6,6 +6,7 @@ import axios from "../../api/axios-allure-docker";
 import AllureDockerBar from "../../containers/AllureDockerBar/AllureDockerBar";
 import AllureDockerProject from "../../containers/AllureDockerProject/AllureDockerProject";
 import AllureDockerSnackBar from "../../components/AllureDockerSnackBar/AllureDockerSnackBar";
+import AllureDockerHomePage from "../../components/AllureDockerHomePage/AllureDockerHomePage"
 import { redirect } from "../../utility/navigate"
 
 const styles = (theme) => ({
@@ -98,12 +99,6 @@ class AllureDockerMainContainer extends Component {
       projects = this.state.projects;
     }
 
-    /* TODO let projectSelected = '';
-    if (this.state.projectSelected) {
-      projectSelected = this.state.projectSelected;
-    }
-    */
-
     const allureProject = (
       <AllureDockerProject
         setAPIAlert={this.setAPIAlert}
@@ -111,7 +106,7 @@ class AllureDockerMainContainer extends Component {
       />
     );
 
-    let content = <div>HOME CONTENT</div>;
+    let content = <AllureDockerHomePage/>;
     if (this.props.match.params.id) {
       content = allureProject;
     }

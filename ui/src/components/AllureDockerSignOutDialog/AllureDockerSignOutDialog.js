@@ -77,10 +77,10 @@ class AllureDockerSignOutDialog extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleCloseDialog} color="primary">
+            <Button onClick={this.handleCloseDialog} color="secondary">
               Cancel
             </Button>
-            <Button onClick={this.signOut} color="primary">
+            <Button onClick={this.signOut} color="secondary">
               Sign Out
             </Button>
           </DialogActions>

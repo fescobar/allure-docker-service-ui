@@ -71,10 +71,10 @@ class AllureDockerDeleteProjectDialog extends Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleCloseDialog} color="primary">
+          <Button onClick={this.handleCloseDialog} color="secondary">
             Cancel
           </Button>
-          <Button onClick={() => this.deleteProject(projectId)} color="primary">
+          <Button onClick={() => this.deleteProject(projectId)} color="secondary">
             Delete
           </Button>
         </DialogActions>

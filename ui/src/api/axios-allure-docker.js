@@ -48,7 +48,6 @@ instance.interceptors.request.use(async (request) => {
   if (localStorage.getItem("expirationDate")) {
     const expirationDate = new Date(localStorage.getItem("expirationDate"));
     if (expirationDate <= new Date()) {
-      console.log("REFRESHING!!!!");
       await refreshInstance
         .post("/refresh")
         .then((response) => {
@@ -70,7 +69,6 @@ instance.interceptors.request.use(async (request) => {
 });
 
 instance.interceptors.response.use((response) => {
-  //TODO response.headers['Set-Cookie'] = "SameSite=None"
   return response;
 });
 

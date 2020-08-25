@@ -2,18 +2,19 @@ import React, { Component } from "react";
 import clsx from "clsx";
 import { fade, withStyles } from "@material-ui/core/styles";
 import AddCircle from "@material-ui/icons/AddCircle";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import Divider from "@material-ui/core/Divider";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HomeIcon from "@material-ui/icons/Home";
 import IconButton from "@material-ui/core/IconButton";
 import InfoIcon from "@material-ui/icons/Info";
-import InputBase from "@material-ui/core/InputBase";
 import LanguageIcon from "@material-ui/icons/Language";
 import MenuIcon from "@material-ui/icons/Menu";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Switch from "@material-ui/core/Switch";
+import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withRouter } from "react-router-dom";
@@ -25,7 +26,8 @@ import AllureDockerConfigDialog from "../AllureDockerConfigDialog/AllureDockerCo
 import AllureDockerInfoDialog from "../AllureDockerInfoDialog/AllureDockerInfoDialog";
 import AllureDockerLanguagesMenu from "../AllureDockerLanguagesMenu/AllureDockerLanguagesMenu";
 import AllureDockerSignOutDialog from "../AllureDockerSignOutDialog/AllureDockerSignOutDialog";
-import { redirectRoot } from "../../utility/navigate";
+import { redirect, redirectRoot } from "../../utility/navigate";
+import axios from "../../api/axios-allure-docker";
 
 const styles = (theme) => ({
   grow: {
@@ -61,16 +63,14 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
-  inputRoot: {
+  searchTextField: {
     color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    padding: theme.spacing(0.5),
+    paddingLeft: `calc(1em + ${theme.spacing(5)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "20ch",
+      width: "40ch",
     },
   },
   sectionDesktop: {
@@ -100,6 +100,7 @@ class AllureDockerToolbar extends Component {
     signOutDialog: false,
     infoDialog: false,
     languagesAnchorEl: null,
+    searchResults: [],
   };
 
   openNewProjectDialog = () => {
@@ -150,6 +151,40 @@ class AllureDockerToolbar extends Component {
     redirectRoot();
   };
 
+  handleAPIErrorAlert = (error) => {
+    this.props.setAPIAlert(
+      "error",
+      `Something wrong => ${error.message}`,
+      true
+    );
+  };
+
+  handleSearch = (event, id) => {
+    axios
+      .get(`/projects/search?id=${id}`)
+      .then((response) => {
+        const projects = response.data.data.projects;
+        const searchResults = [];
+        for (const id in projects) {
+          searchResults.push(id);
+        }
+        this.setState({ searchResults: searchResults });
+      })
+      .catch((error) => {
+        redirect(error);
+        if (error.status !== 404) {
+          this.handleAPIErrorAlert(error);
+        }
+        this.setState({ searchResults: [] });
+      });
+  };
+
+  handleSearchValue = (event, value) => {
+    if (value) {
+      this.props.history.push(`/projects/${value}`);
+    }
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -185,13 +220,21 @@ class AllureDockerToolbar extends Component {
           <div className={classes.searchIcon}>
             <SearchIcon />
           </div>
-          <InputBase
-            placeholder="Project ID…"
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ "aria-label": "search" }}
+          <Autocomplete
+            className={classes.searchTextField}
+            options={this.state.searchResults}
+            onInputChange={this.handleSearch}
+            onChange={this.handleSearchValue}
+            noOptionsText={'project not found'}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Project ID..."
+                margin="none"
+                variant="standard"
+                InputProps={{ ...params.InputProps, disableUnderline: true }}
+              />
+            )}
           />
         </div>
 
@@ -266,6 +309,7 @@ class AllureDockerToolbar extends Component {
             handleCloseDialog={this.closeInfoDialog}
           />
           <AllureDockerLanguagesMenu
+            setAPIAlert={this.props.setAPIAlert}
             closeLanguagesMenu={this.closeLanguagesMenu}
             anchorEl={this.state.languagesAnchorEl}
           />

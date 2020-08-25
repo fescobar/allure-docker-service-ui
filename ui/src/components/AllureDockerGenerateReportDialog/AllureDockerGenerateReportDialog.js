@@ -10,11 +10,12 @@ import { withRouter } from "react-router-dom";
 import axios from "../../api/axios-allure-docker";
 import { redirect } from "../../utility/navigate";
 
+const executionName = "Allure Docker Service UI"
 class AllureDockerGenerateReportDialog extends Component {
   generateReport = (projectId) => {
     this.props.showProgress(true);
     axios
-      .get(`/generate-report?project_id=${projectId}`)
+      .get(`/generate-report?project_id=${projectId}&execution_name=${executionName}`)
       .then((response) => {
         this.props.showProgress(false);
         this.handleAPISuccessAlert(projectId);
@@ -71,12 +72,12 @@ class AllureDockerGenerateReportDialog extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleCloseDialog} color="primary">
+            <Button onClick={this.handleCloseDialog} color="secondary">
               Cancel
             </Button>
             <Button
               onClick={() => this.generateReport(projectId)}
-              color="primary"
+              color="secondary"
             >
               Generate Report
             </Button>

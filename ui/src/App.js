@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { blueGrey, red, cyan } from "@material-ui/core/colors";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import AllureDockerSigIn from "./components/AllureDockerSigIn/AllureDockerSigIn";
@@ -61,8 +60,8 @@ class App extends Component {
   };
 
   render() {
-    const mainPrimaryColor = this.state.darkState ? cyan[300] : blueGrey[800];
-    const mainSecondaryColor = this.state.darkState ? cyan[100] : red[500];
+    const mainPrimaryColor = this.state.darkState ? "#0d47a1" : "#2196f3";
+    const mainSecondaryColor = this.state.darkState ? "#1e88e5" : "#0d47a1";
     const palletType = this.state.darkState ? "dark" : "light";
     const darkTheme = createMuiTheme({
       palette: {

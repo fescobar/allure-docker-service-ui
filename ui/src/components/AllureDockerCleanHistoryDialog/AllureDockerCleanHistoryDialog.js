@@ -70,10 +70,10 @@ class AllureDockerCleanHistoryDialog extends Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleCloseDialog} color="primary">
+          <Button onClick={this.handleCloseDialog} color="secondary">
             Cancel
           </Button>
-          <Button onClick={() => this.cleanHistory(projectId)} color="primary">
+          <Button onClick={() => this.cleanHistory(projectId)} color="secondary">
             Clean History
           </Button>
         </DialogActions>

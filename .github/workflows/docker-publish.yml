@@ -1,4 +1,4 @@
-name: Docker
+name: Allure Docker UI Workflow
 
 on:
   push:
@@ -44,7 +44,7 @@ jobs:
             --build-arg VERSION=${VERSION} \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             --build-arg VCS_REF=${GITHUB_SHA::8} \
-            ${TAGS} --file docker/Dockerfile.bionic .
+            ${TAGS} --file docker/Dockerfile .
 
       - name: Setting up Docker Buildx
         id: buildx

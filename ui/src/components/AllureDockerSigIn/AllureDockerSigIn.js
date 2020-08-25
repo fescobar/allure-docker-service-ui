@@ -1,23 +1,23 @@
 import React, { Component } from "react";
-import Avatar from "@material-ui/core/Avatar";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Link from "@material-ui/core/Link";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import { withStyles } from "@material-ui/core/styles";
-import { withRouter } from "react-router-dom";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import AccountCircle from "@material-ui/icons/AccountCircle";
 import IconButton from "@material-ui/core/IconButton";
+import Link from "@material-ui/core/Link";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { withStyles } from "@material-ui/core/styles";
+import { withRouter } from "react-router-dom";
 
 import axios from "../../api/axios-allure-docker";
+import allure from "../../assets/images/allure.png";
+import docker from "../../assets/images/docker.png";
 
 function Copyright() {
   return (
@@ -40,10 +40,6 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -140,10 +136,11 @@ class AllureDockerSignIn extends Component {
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
+            <div align="center">
+              <img src={allure} alt="allure" height="100"/>
+              <img src={docker} alt="docker" height="100"/>
+            </div>
+            <Typography component="h1" variant="h5" align="center">
               Allure Docker Service UI
             </Typography>
             <form className={classes.form} noValidate onSubmit={this.signin}>
@@ -208,7 +205,7 @@ class AllureDockerSignIn extends Component {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
+                color="secondary"
                 className={classes.submit}
               >
                 Sign In

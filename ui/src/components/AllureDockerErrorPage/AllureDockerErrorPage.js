@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   root: {
@@ -24,6 +25,30 @@ const styles = (theme) => ({
 class AllureDockerErrorPage extends Component {
   render() {
     const { classes } = this.props;
+    let connectivityIssue = "";
+    const errorMessage = this.props.error.message;
+    if (errorMessage) {
+      if (errorMessage.includes("Network Error")) {
+        connectivityIssue = (
+          <React.Fragment>
+            <Typography variant="h5" gutterBottom>
+              Check if you have access to{" "}
+              <Link
+                color="secondary"
+                href={window._env_.ALLURE_DOCKER_API_URL}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {window._env_.ALLURE_DOCKER_API_URL}
+              </Link>
+            </Typography>
+            <Typography variant="h5" gutterBottom>
+              Or pull the latest "frankescobar/allure-docker-service" API image (remove your current latest version)
+            </Typography>
+          </React.Fragment>
+        );
+      }
+    }
 
     return (
       <React.Fragment>
@@ -37,6 +62,7 @@ class AllureDockerErrorPage extends Component {
               <Typography variant="h3" gutterBottom>
                 {this.props.error.message}
               </Typography>
+              {connectivityIssue}
               <Typography
                 variant="body1"
                 gutterBottom

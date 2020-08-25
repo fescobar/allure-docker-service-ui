@@ -70,10 +70,10 @@ class AllureDockerCleanResultsDialog extends Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleCloseDialog} color="primary">
+          <Button onClick={this.handleCloseDialog} color="secondary">
             Cancel
           </Button>
-          <Button onClick={() => this.cleanResults(projectId)} color="primary">
+          <Button onClick={() => this.cleanResults(projectId)} color="secondary">
             Clean Results
           </Button>
         </DialogActions>

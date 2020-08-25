@@ -2,6 +2,7 @@
   "name": "allure-docker-service-ui",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@material-ui/core": "4.11.0",
     "@material-ui/icons": "4.9.1",
@@ -15,7 +16,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "./generate_env_file.sh && mv env-config.js ./public/ && PORT=4000 react-scripts start",
+    "start": "./generate_env_file.sh && mv env-config.js ./public/ && cp config-dummy.json ./public/config.json && PORT=4000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

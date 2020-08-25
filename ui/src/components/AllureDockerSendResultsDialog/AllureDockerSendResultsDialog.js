@@ -20,7 +20,7 @@ const styles = (theme) => ({
     maxWidth: 700,
   },
   error: {
-    color: 'secondary'
+    color: theme.palette.secondary.main
   }
 });
 
@@ -157,10 +157,10 @@ class AllureDockerSendResultsDialog extends Component {
             </div>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleCloseDialog} color="primary">
+            <Button onClick={this.handleCloseDialog} color="secondary">
               Cancel
             </Button>
-            <Button type="submit" color="primary">
+            <Button type="submit" color="secondary">
               Send Results
             </Button>
           </DialogActions>

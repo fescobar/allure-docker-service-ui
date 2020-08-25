@@ -7,16 +7,15 @@ import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-
+import FileCopyRounded from "@material-ui/icons/FileCopyRounded";
+import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import Refresh from "@material-ui/icons/Refresh";
-import FileCopyRounded from "@material-ui/icons/FileCopyRounded";
-import { withRouter } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+import { withRouter } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
 
 import axios from "../../api/axios-allure-docker";
 import AllureDockerReportsDropDown from "../../components/AllureDockerReportsDropDown/AllureDockerReportsDropDown";
@@ -25,7 +24,7 @@ import AllureDockerGenerateReport from "../../components/AllureDockerGenerateRep
 import AllureDockerCleanResultsDialog from "../../components/AllureDockerCleanResultsDialog/AllureDockerCleanResultsDialog";
 import AllureDockerCleanHistoryDialog from "../../components/AllureDockerCleanHistoryDialog/AllureDockerCleanHistoryDialog";
 import AllureDockerSendResultsDialog from "../../components/AllureDockerSendResultsDialog/AllureDockerSendResultsDialog";
-import { redirect } from "../../utility/navigate";
+import { redirect, redirectRootInSeconds } from "../../utility/navigate";
 
 const styles = (theme) => ({
   container: {
@@ -38,18 +37,8 @@ const styles = (theme) => ({
     overflow: "auto",
     flexDirection: "column",
   },
-  optionsFixedHeight: {
-    height: 150,
-  },
-  dashBoardFixedHeight: {
-    height: 1100,
-  },
   cardMedia: {
     height: 1000,
-  },
-  iframe: {
-    height: 1000,
-    width: 1500,
   },
   rootButtonGroup: {
     display: "flex",
@@ -119,7 +108,6 @@ class AllureDockerProject extends Component {
       .catch((error) => {
         redirect(error);
 
-        //TODO
         let projectNotFound = false;
         if (error.status === 404) {
           projectNotFound = true;
@@ -129,6 +117,7 @@ class AllureDockerProject extends Component {
         project.id = projectId;
         project.reports = [];
         this.setState({ project: project, projectNotFound: projectNotFound });
+        redirectRootInSeconds(3);
       });
   };
 
@@ -530,34 +519,6 @@ class AllureDockerProject extends Component {
             </Paper>
           </Grid>
         </Grid>
-
-        {/*
-          <Grid container spacing={3}>
-            <Box pt={4}></Box>
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}></Paper>
-            </Grid>
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}></Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}></Paper>
-            </Grid>
-          </Grid>*/}
-
-        {/*
-        <Link color="inherit" href="https://material-ui.com/">
-          Allure
-        </Link>{" "}
-        <Typography variant="body2" color="textSecondary" align="center">
-          {"Copyright © "}
-          <Link color="inherit" href="https://material-ui.com/">
-            allure
-          </Link>{" "}
-          {new Date().getFullYear()}
-          {"."}
-        </Typography>
-        */}
       </React.Fragment>
     );
   }

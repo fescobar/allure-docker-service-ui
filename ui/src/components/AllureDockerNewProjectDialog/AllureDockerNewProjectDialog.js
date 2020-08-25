@@ -8,10 +8,19 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import { withRouter } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
 
 import axios from "../../api/axios-allure-docker";
 import { redirect } from "../../utility/navigate";
 
+const styles = (theme) => ({
+  formLabel: {
+    color: theme.palette.secondary.main,
+    "&.Mui-focused": {
+      color: theme.palette.secondary.main,
+    },
+  },
+});
 class AllureDockerNewProjectDialog extends Component {
   constructor(props) {
     super(props);
@@ -21,9 +30,9 @@ class AllureDockerNewProjectDialog extends Component {
   get initialState() {
     return {
       projectIdTextField: {
-        value: '',
+        value: "",
         error: false,
-        errorMessage: '',
+        errorMessage: "",
       },
     };
   }
@@ -37,10 +46,14 @@ class AllureDockerNewProjectDialog extends Component {
         this.resetStates();
         this.props.closeNewProjectDialog();
         this.props.getProjects();
-        
-        const projectId = response.data.data.id
+
+        const projectId = response.data.data.id;
         this.props.history.replace(`/projects/${projectId}`);
-        this.props.setAPIAlert('success', `Project ${projectId.toUpperCase()} created succesfully!`, true);
+        this.props.setAPIAlert(
+          "success",
+          `Project ${projectId.toUpperCase()} created succesfully!`,
+          true
+        );
       })
       .catch((error) => {
         redirect(error);
@@ -71,6 +84,7 @@ class AllureDockerNewProjectDialog extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     return (
       <Dialog
         open={this.props.open}
@@ -93,16 +107,19 @@ class AllureDockerNewProjectDialog extends Component {
             onChange={this.handleProjectIdTextFieldChange}
             fullWidth
             aria-describedby="component-error-project-id"
+            InputLabelProps={{
+              className: classes.formLabel,
+            }}
           />
           <FormHelperText id="component-error-project-id">
             {this.state.projectIdTextField.errorMessage}
           </FormHelperText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleCloseDialog} color="primary">
+          <Button onClick={this.handleCloseDialog} color="secondary">
             Cancel
           </Button>
-          <Button onClick={this.createProject} color="primary">
+          <Button onClick={this.createProject} color="secondary">
             Create
           </Button>
         </DialogActions>
@@ -110,5 +127,6 @@ class AllureDockerNewProjectDialog extends Component {
     );
   }
 }
-
-export default withRouter(AllureDockerNewProjectDialog);
+export default withStyles(styles, { withTheme: true })(
+  withRouter(AllureDockerNewProjectDialog)
+);

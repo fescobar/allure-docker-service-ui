@@ -5,6 +5,9 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
+import allure from "../../assets/images/allure.png";
+import docker from "../../assets/images/docker.png";
+
 const styles = (theme) => ({
   root: {
     display: "flex",
@@ -19,9 +22,10 @@ const styles = (theme) => ({
     display: "flex",
     overflow: "auto",
     flexDirection: "column",
+    height: 850,
   },
 });
-class AllureDockerNotFound extends Component {
+class AllureDockerHomePage extends Component {
   render() {
     const { classes } = this.props;
 
@@ -31,9 +35,13 @@ class AllureDockerNotFound extends Component {
         <Grid container spacing={8}>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <Typography variant="h1" gutterBottom align="center">
-                PAGE NOT FOUND
-              </Typography>
+              <div style={{ height: "100%" }} align="center">
+                <img src={allure} alt="allure" />
+                <img src={docker} alt="docker" />
+                <Typography variant="h3" color="textSecondary" align="center">
+                  ALLURE DOCKER SERVICE UI
+                </Typography>
+              </div>
             </Paper>
           </Grid>
         </Grid>
@@ -41,5 +49,4 @@ class AllureDockerNotFound extends Component {
     );
   }
 }
-
-export default withStyles(styles, { withTheme: true })(AllureDockerNotFound);
+export default withStyles(styles, { withTheme: true })(AllureDockerHomePage);

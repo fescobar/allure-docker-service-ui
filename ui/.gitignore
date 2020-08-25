@@ -18,8 +18,5 @@ yarn-error.log*
 yarn.lock
 package-lock.json
 
-/allure-results
-/allure-reports
-/projects
-
 /public/env-config.js
+/public/config.json

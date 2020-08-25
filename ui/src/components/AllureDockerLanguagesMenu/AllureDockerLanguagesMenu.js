@@ -4,18 +4,44 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { withRouter } from "react-router-dom";
 
+import axios from "../../api/axios-allure-docker";
+import { redirect, refreshCurrentPageInSeconds } from "../../utility/navigate";
+
 const languages = ["en", "ru", "zh", "de", "he", "br", "pl", "ja", "es", "kr"];
 class AllureDockerLanguagesMenu extends Component {
-  handleLanguage = (languageCode) => {
-    const allureReportSettings = {
-      language: languageCode,
-      sidebarCollapsed: true,
-      sideBySidePosition: [50, 50]
-    }
+  state = {
+    languageCode: null,
+  };
 
-    localStorage.setItem('ALLURE_REPORT_SETTINGS', JSON.stringify(allureReportSettings));
-    this.props.closeLanguagesMenu()
-    this.props.history.go();
+  handleLanguage = (languageCode) => {
+    axios
+      .get(`/select-language?code=${languageCode}`)
+      .then((response) => {
+        this.setState({ languageCode: languageCode });
+        this.handleAPISuccessAlert(languageCode);
+        refreshCurrentPageInSeconds(3);
+      })
+      .catch((error) => {
+        redirect(error);
+        this.handleAPIErrorAlert(error);
+      });
+    this.props.closeLanguagesMenu();
+  };
+
+  handleAPISuccessAlert = (languageCode) => {
+    this.props.setAPIAlert(
+      "info",
+      `The page will be refreshed in a few seconds - Language ${languageCode.toUpperCase()} updated succesfully!`,
+      true
+    );
+  };
+
+  handleAPIErrorAlert = (error) => {
+    this.props.setAPIAlert(
+      "error",
+      `Something wrong => ${error.message}`,
+      true
+    );
   };
 
   render() {
@@ -31,6 +57,17 @@ class AllureDockerLanguagesMenu extends Component {
       );
     }
 
+    let hiddenIframe = null;
+    if (this.state.languageCode) {
+      hiddenIframe = (
+        <iframe
+          hidden
+          title="loadLanguage"
+          src={`${window._env_.ALLURE_DOCKER_API_URL}/select-language?code=${this.state.languageCode}`}
+        ></iframe>
+      );
+    }
+
     return (
       <React.Fragment>
         <Menu
@@ -42,6 +79,7 @@ class AllureDockerLanguagesMenu extends Component {
           onClose={this.props.closeLanguagesMenu}
         >
           {languagesItems}
+          {hiddenIframe}
         </Menu>
       </React.Fragment>
     );
