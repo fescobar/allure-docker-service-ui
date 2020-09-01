@@ -1,0 +1,36 @@
+{
+  "name": "allure-docker-service-ui",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": ".",
+  "dependencies": {
+    "@material-ui/core": "4.11.0",
+    "@material-ui/icons": "4.9.1",
+    "@material-ui/lab": "4.0.0-alpha.56",
+    "axios": "0.19.2",
+    "react": "16.13.1",
+    "react-cookie": "4.0.3",
+    "react-dom": "16.13.1",
+    "react-router-dom": "5.2.0",
+    "react-scripts": "3.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "./generate_env_file.sh && mv env-config.js ./public/ && cp config-dummy.json ./public/config.json && PORT=4000 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

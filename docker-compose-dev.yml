@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  allure-docker-service-ui:
+    build:
+      context: ../allure-docker-service-ui
+      dockerfile: docker/Dockerfile
+      args:
+        BUILD_DATE: "na"
+        VERSION: "na"
+        VCS_REF: "na"
+    environment:
+      ALLURE_DOCKER_PUBLIC_API_URL: "http://localhost:5050"
+      ALLURE_DOCKER_PUBLIC_API_URL_PREFIX: ""
+      #URL_PREFIX: "/my-prefix"
+    ports:
+      - "7474:5252"
+
+  allure:
+    image: "frankescobar/allure-docker-service"
+    environment:
+      CHECK_RESULTS_EVERY_SECONDS: NONE
+      KEEP_HISTORY: 1
+      KEEP_HISTORY_LATEST: 12
+      SECURITY_USER: my_username
+      SECURITY_PASS: my_password
+      SECURITY_ENABLED: 1
+      #URL_PREFIX: /my-prefix
+      #ACCESS_TOKEN_EXPIRES_IN_SECONDS: 10
+      #REFRESH_TOKEN_EXPIRES_IN_SECONDS: 10
+    ports:
+      - "5050:5050"
+    volumes:
+      - ${PWD}/projects:/app/projects
