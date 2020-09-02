@@ -14,6 +14,7 @@ Table of contents
       * [Docker on Windows (Git Bash)](#docker-on-windows-git-bash)
       * [Docker Compose](#docker-compose)
       * [Implementation Examples](#implementation-examples)
+      * [Known Issues](#known-issues)
       * [Accessing UI](#accessing-ui)
       * [Extra options](#extra-options)
           * [Get Info](#get-info)
@@ -106,6 +107,9 @@ docker-compose logs -f allure-ui
 ### Implementation Examples
 Check examples here:
 [frankescobar/allure-docker-service-examples](https://github.com/fescobar/allure-docker-service-examples)
+
+### Known Issues
+- `Network Error when I tried to access http://localhost:5252/allure-docker-service-ui/` --> https://github.com/fescobar/allure-docker-service-ui/issues/4
 
 ### Accessing UI
 Open your browser and access to the UI: http://localhost:5252/allure-docker-service-ui
