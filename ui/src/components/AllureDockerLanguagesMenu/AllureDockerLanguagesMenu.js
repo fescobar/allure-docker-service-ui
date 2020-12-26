@@ -7,7 +7,7 @@ import { withRouter } from "react-router-dom";
 import axios from "../../api/axios-allure-docker";
 import { redirect, refreshCurrentPageInSeconds } from "../../utility/navigate";
 
-const languages = ["en", "ru", "zh", "de", "he", "br", "pl", "ja", "es", "kr"];
+const languages = ["en", "ru", "zh", "de", "nl", "he", "br", "pl", "ja", "es", "kr", "fr"];
 class AllureDockerLanguagesMenu extends Component {
   state = {
     languageCode: null,
