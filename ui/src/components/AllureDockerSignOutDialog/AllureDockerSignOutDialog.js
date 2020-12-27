@@ -19,6 +19,7 @@ class AllureDockerSignOutDialog extends Component {
       .delete("/logout")
       .then((response) => {
         localStorage.removeItem("expirationDate");
+        localStorage.removeItem("roles");
 
         const csrf = cookies.get("csrf_refresh_token");
         const config = {

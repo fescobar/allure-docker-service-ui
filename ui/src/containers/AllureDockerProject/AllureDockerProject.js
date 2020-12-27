@@ -25,6 +25,7 @@ import AllureDockerCleanResultsDialog from "../../components/AllureDockerCleanRe
 import AllureDockerCleanHistoryDialog from "../../components/AllureDockerCleanHistoryDialog/AllureDockerCleanHistoryDialog";
 import AllureDockerSendResultsDialog from "../../components/AllureDockerSendResultsDialog/AllureDockerSendResultsDialog";
 import { redirect, redirectRootInSeconds } from "../../utility/navigate";
+import { isAdmin } from "../../utility/user-actions";
 
 const styles = (theme) => ({
   container: {
@@ -346,6 +347,7 @@ class AllureDockerProject extends Component {
           color="secondary"
           onClick={this.openDeleteProjectDialog}
           key="delete"
+          disabled={!isAdmin()}
         >
           Delete Project
         </Button>
@@ -358,22 +360,38 @@ class AllureDockerProject extends Component {
       reports.length === 0
     ) {
       buttons.push(
-        <Button key="send-results" onClick={this.openSendResultsDialog}>
+        <Button
+          key="send-results"
+          onClick={this.openSendResultsDialog}
+          disabled={!isAdmin()}
+        >
           Send Results
         </Button>
       );
       buttons.push(
-        <Button key="generate-report" onClick={this.openGenerateReportDialog}>
+        <Button
+          key="generate-report"
+          onClick={this.openGenerateReportDialog}
+          disabled={!isAdmin()}
+        >
           Generate Report
         </Button>
       );
       buttons.push(
-        <Button key="clean-results" onClick={this.openCleanResultsDialog}>
+        <Button
+          key="clean-results"
+          onClick={this.openCleanResultsDialog}
+          disabled={!isAdmin()}
+        >
           Clean Results
         </Button>
       );
       buttons.push(
-        <Button key="clean-history" onClick={this.openCleanHistoryDialog}>
+        <Button
+          key="clean-history"
+          onClick={this.openCleanHistoryDialog}
+          disabled={!isAdmin()}
+        >
           Clean History
         </Button>
       );

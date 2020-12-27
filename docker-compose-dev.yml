@@ -24,6 +24,8 @@ services:
       KEEP_HISTORY_LATEST: 12
       SECURITY_USER: my_username
       SECURITY_PASS: my_password
+      SECURITY_VIEWER_USER: "view_user"
+      SECURITY_VIEWER_PASS: "view_pass"
       SECURITY_ENABLED: 1
       #URL_PREFIX: /my-prefix
       #ACCESS_TOKEN_EXPIRES_IN_SECONDS: 10
