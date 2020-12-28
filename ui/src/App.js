@@ -32,6 +32,9 @@ class App extends Component {
         let isLogoutNeeded = false;
         if (isSecurityEnabled === 1) {
           isLogoutNeeded = true;
+        } else {
+          localStorage.removeItem("expirationDate");
+          localStorage.removeItem("roles");
         }
         this.setState({
           isLoginRequired: false,

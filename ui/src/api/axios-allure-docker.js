@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as errors from "../api/errors/errors";
 import { Cookies } from "react-cookie";
+import { setRoles } from "../utility/user-actions";
 
 const cookies = new Cookies();
 
@@ -58,9 +59,11 @@ instance.interceptors.request.use(async (request) => {
             );
             localStorage.setItem("expirationDate", expirationDate);
           }
+          setRoles(response.data.data.roles);
         })
         .catch((error) => {
           localStorage.removeItem("expirationDate");
+          localStorage.removeItem("roles");
         });
     }
   }

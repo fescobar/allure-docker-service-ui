@@ -18,6 +18,7 @@ import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withRouter } from "react-router-dom";
+import { isAdmin } from "../../utility/user-actions";
 
 import SwaggerLogo from "../../components/SwaggerLogo/SwaggerLogo";
 
@@ -244,7 +245,7 @@ class AllureDockerToolbar extends Component {
           <HomeIcon />
         </IconButton>
 
-        <IconButton color="inherit" onClick={this.openNewProjectDialog}>
+        <IconButton color="inherit" onClick={this.openNewProjectDialog} disabled={!isAdmin()}>
           <AddCircle />
         </IconButton>
 

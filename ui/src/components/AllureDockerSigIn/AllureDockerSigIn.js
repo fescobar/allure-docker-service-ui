@@ -14,6 +14,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
+import { setRoles } from "../../utility/user-actions";
 
 import axios from "../../api/axios-allure-docker";
 import allure from "../../assets/images/allure.png";
@@ -90,6 +91,7 @@ class AllureDockerSignIn extends Component {
           );
           localStorage.setItem("expirationDate", expirationDate);
         }
+        setRoles(response.data.data.roles);
         this.props.isLoginRequired();
         this.props.history.replace("/");
       })

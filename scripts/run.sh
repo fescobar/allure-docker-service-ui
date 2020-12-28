@@ -23,8 +23,6 @@ fi
 echo """ALLURE_DOCKER_API_URL=${FULL_ALLURE_DOCKER_API_URL}
 ROUTER_BASE_NAME=${UI_URL_PREFIX}""" > $ROOT/.env
 
-cat $ROOT/.env
-
 $ROOT/generate_env_file.sh
 
 mv $ROOT/env-config.js $ROOT/ui
@@ -38,6 +36,8 @@ CONFIG_JSON=$(cat <<EOF
 }
 EOF
 )
+echo "ALLURE_UI_VERSION: $VERSION"
+cat $ROOT/.env
 echo $CONFIG_JSON > $ROOT/ui/config.json
 
 URL_PREFIX="${URL_PREFIX}" node $ROOT/ui/server.js
