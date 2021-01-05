@@ -22,6 +22,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
     org.label-schema.vcs-url="https://github.com/fescobar/allure-docker-service-ui" \
     authors="Frank Escobar <fescobar.systems@gmail.com>"
 
+RUN apt-get update && \
+    apt install curl -y
+
 ENV ROOT=/app
 
 WORKDIR $ROOT
