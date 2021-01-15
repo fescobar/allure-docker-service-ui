@@ -8,10 +8,34 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
+import localAxios from "axios";
+
 class AllureDockerInfoDialog extends Component {
+  state = {
+    version: null,
+  };
+
+  getConfig = () => {
+    const axios = localAxios.create();
+    axios
+      .get(`${process.env.PUBLIC_URL}/config.json`)
+      .then((response) => {
+        this.setState({ version: response.data.version });
+      })
+      .catch((error) => {
+        this.setState({ version: 'NOT_FOUND' });
+      });
+  };
+
   handleCloseDialog = () => {
     this.props.handleCloseDialog();
   };
+
+  componentDidUpdate() {
+    if (!this.state.version) {
+      this.getConfig();
+    }
+  }
 
   render() {
     return (
@@ -25,47 +49,58 @@ class AllureDockerInfoDialog extends Component {
           <DialogContentText>
             <Typography
               component="span"
-              variant="body1"
+              variant="h6"
               color="textSecondary"
               align="left"
             >
-              {"Frank Escobar --> "}
-              <Link
-                color="inherit"
-                href="http://ar.linkedin.com/in/fescobarsystems"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                LinkedIn
-              </Link>
+              Allure UI Version
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="secondary"
+              align="center"
+            >
+              {this.state.version}
             </Typography>
           </DialogContentText>
           <DialogContentText>
             <Typography
               component="span"
-              variant="body1"
+              variant="h6"
               color="textSecondary"
               align="left"
             >
-              {"Support --> "}
+              Support
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="secondary"
+              align="center"
+            >
               <Link
                 color="inherit"
                 href="https://gitter.im/allure-docker-service/community"
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Gitter
+                https://gitter.im/allure-docker-service/community
               </Link>
             </Typography>
           </DialogContentText>
           <DialogContentText>
             <Typography
               component="span"
-              variant="body1"
+              variant="h6"
               color="textSecondary"
               align="left"
             >
-              {"UI --> "}
+              UI
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="secondary"
+              align="center"
+            >
               <Link
                 color="inherit"
                 href="https://github.com/fescobar/allure-docker-service-ui"
@@ -79,11 +114,17 @@ class AllureDockerInfoDialog extends Component {
           <DialogContentText>
             <Typography
               component="span"
-              variant="body1"
+              variant="h6"
               color="textSecondary"
               align="left"
             >
-              {"API --> "}
+              API
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="secondary"
+              align="center"
+            >
               <Link
                 color="inherit"
                 href="https://github.com/fescobar/allure-docker-service"
@@ -97,11 +138,17 @@ class AllureDockerInfoDialog extends Component {
           <DialogContentText>
             <Typography
               component="span"
-              variant="body1"
+              variant="h6"
               color="textSecondary"
               align="left"
             >
-              {"Examples --> "}
+              Examples
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="secondary"
+              align="center"
+            >
               <Link
                 color="inherit"
                 href="https://github.com/fescobar/allure-docker-service-examples"
@@ -109,6 +156,33 @@ class AllureDockerInfoDialog extends Component {
                 target="_blank"
               >
                 https://github.com/fescobar/allure-docker-service-examples
+              </Link>
+            </Typography>
+          </DialogContentText>
+        </DialogContent>
+        <DialogTitle id="form-dialog-title">AUTHOR</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <Typography
+              component="span"
+              variant="body1"
+              color="textSecondary"
+              align="left"
+            >
+              {"Frank Escobar"}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="secondary"
+              align="center"
+            >
+              <Link
+                color="inherit"
+                href="https://www.linkedin.com/in/fescobarsystems/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                LinkedIn
               </Link>
             </Typography>
           </DialogContentText>

@@ -19,3 +19,4 @@ package-lock.json
 
 /public/env-config.js
 /public/config.json
+.eslintcache
