@@ -1,4 +1,4 @@
-name: Allure Docker UI Workflow
+name: Allure Docker Service UI Workflow
 
 on:
   push:
@@ -14,7 +14,7 @@ env:
   DOCKER_IMAGE: frankescobar/allure-docker-service-ui
 
 jobs:
-  push:
+  build-release:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
@@ -46,15 +46,14 @@ jobs:
             --build-arg VCS_REF=${GITHUB_SHA::8} \
             ${TAGS} --file docker/Dockerfile .
 
+      - name: Setting up QEMU
+        uses: docker/setup-qemu-action@v1
+
       - name: Setting up Docker Buildx
         id: buildx
-        uses: crazy-max/ghaction-docker-buildx@v3
+        uses: docker/setup-buildx-action@v1
         with:
-          buildx-version: latest
-          qemu-version: latest
-
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+          version: latest
 
       - name: Docker Building
         run: |
@@ -62,7 +61,7 @@ jobs:
 
       - name: DockerHub Login
         if: success() && startsWith(github.ref, 'refs/tags/v')
-        uses: crazy-max/ghaction-docker-login@v1
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
