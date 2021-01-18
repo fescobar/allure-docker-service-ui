@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import HomeIcon from "@material-ui/icons/Home";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Link from "@material-ui/core/Link";
@@ -15,6 +16,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import { setRoles } from "../../utility/user-actions";
+import { redirectRoot } from "../../utility/navigate";
 
 import axios from "../../api/axios-allure-docker";
 import allure from "../../assets/images/allure.png";
@@ -74,7 +76,7 @@ class AllureDockerSignIn extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   signin = (event) => {
     event.preventDefault();
@@ -130,8 +132,21 @@ class AllureDockerSignIn extends Component {
     this.setState(this.initialState);
   };
 
+  goToHome = () => {
+    redirectRoot();
+  };
+
   render() {
     const { classes } = this.props;
+
+    let isHomeAnOption;
+    if (this.props.isHomeAnOption) {
+      isHomeAnOption = (
+        <IconButton color="inherit" onClick={this.goToHome}>
+          <HomeIcon />
+        </IconButton>
+      );
+    }
 
     return (
       <div>
@@ -139,8 +154,8 @@ class AllureDockerSignIn extends Component {
           <CssBaseline />
           <div className={classes.paper}>
             <div align="center">
-              <img src={allure} alt="allure" height="100"/>
-              <img src={docker} alt="docker" height="100"/>
+              <img src={allure} alt="allure" height="100" />
+              <img src={docker} alt="docker" height="100" />
             </div>
             <Typography component="h1" variant="h5" align="center">
               Allure Docker Service UI
@@ -191,8 +206,8 @@ class AllureDockerSignIn extends Component {
                         {this.state.passTextField.show ? (
                           <Visibility />
                         ) : (
-                          <VisibilityOff />
-                        )}
+                            <VisibilityOff />
+                          )}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -213,6 +228,7 @@ class AllureDockerSignIn extends Component {
                 Sign In
               </Button>
             </form>
+            {isHomeAnOption}
           </div>
           <Box mt={8}>
             <Copyright />

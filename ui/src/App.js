@@ -3,6 +3,7 @@ import "./App.css";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
+import { setViewerRole } from "./utility/user-actions";
 import AllureDockerSigIn from "./components/AllureDockerSigIn/AllureDockerSigIn";
 import AllureDockerMainContainer from "./containers/AllureDockerMainContainer/AllureDockerMainContainer";
 import AllureDockerReportFullView from "./components/AllureDockerReportFullView/AllureDockerReportFullView";
@@ -14,6 +15,7 @@ class App extends Component {
   state = {
     darkState: false,
     isLogoutNeeded: false,
+    isSignInAnOption: false,
     isLoginRequired: null,
     error: null,
   };
@@ -23,15 +25,33 @@ class App extends Component {
     this.recoverTheme();
   }
 
+  isAdminEndpointAccessible = () => {
+    return axios
+      .post("/send-results")
+      .then((response) => {
+        return response.status !== 401;
+      })
+      .catch((error) => {
+        return error.status !== 401;
+      });
+  }
+
   isLoginRequired = () => {
     this.setState({ error: null });
     axios
       .get("/config")
-      .then((response) => {
+      .then(async (response) => {
         const isSecurityEnabled = response.data.data.security_enabled;
         let isLogoutNeeded = false;
+        let isSignInAnOption = false;
         if (isSecurityEnabled === 1) {
           isLogoutNeeded = true;
+          const isMakeViewerEndpointsPublic = response.data.data.make_viewer_endpoints_public;
+          if (isMakeViewerEndpointsPublic === 1 && !await this.isAdminEndpointAccessible()) {
+            setViewerRole();
+            isLogoutNeeded = false;
+            isSignInAnOption = true;
+          }
         } else {
           localStorage.removeItem("expirationDate");
           localStorage.removeItem("roles");
@@ -39,6 +59,7 @@ class App extends Component {
         this.setState({
           isLoginRequired: false,
           isLogoutNeeded: isLogoutNeeded,
+          isSignInAnOption: isSignInAnOption
         });
       })
       .catch((error) => {
@@ -90,13 +111,29 @@ class App extends Component {
             <Route
               path="/signin"
               render={() => (
-                <AllureDockerSigIn isLoginRequired={this.isLoginRequired} />
+                <AllureDockerSigIn isLoginRequired={this.isLoginRequired}/>
               )}
             />
             <Route render={() => <Redirect to="/signin" />} />
           </Switch>
         );
       } else {
+        let signInAnOption;
+        if (this.state.isSignInAnOption) {
+          signInAnOption = (
+            <React.Fragment>
+              <Route
+                path="/signin"
+                render={() => (
+                  <AllureDockerSigIn isLoginRequired={this.isLoginRequired} isHomeAnOption={!this.isSignInAnOption}/>
+                )}
+              />
+            </React.Fragment>
+          )
+        } else {
+          signInAnOption = (<Route path="/signin" exact render={() => <Redirect to="/" />} />)
+        }
+
         switchRouter = (
           <Switch>
             <Route
@@ -107,6 +144,7 @@ class App extends Component {
                   darkState={this.state.darkState}
                   handleThemeChange={this.handleThemeChange}
                   isLogoutNeeded={this.state.isLogoutNeeded}
+                  isSignInAnOption={this.state.isSignInAnOption}
                 />
               )}
             />
@@ -118,6 +156,7 @@ class App extends Component {
                   darkState={this.state.darkState}
                   handleThemeChange={this.handleThemeChange}
                   isLogoutNeeded={this.state.isLogoutNeeded}
+                  isSignInAnOption={this.state.isSignInAnOption}
                 />
               )}
             />
@@ -126,7 +165,7 @@ class App extends Component {
               exact
               render={() => <AllureDockerReportFullView />}
             />
-            <Route path="/signin" exact render={() => <Redirect to="/" />} />
+            {signInAnOption}
             <Route component={AllureDockerNotFound} />
           </Switch>
         );
