@@ -120,6 +120,7 @@ class AllureDockerMainContainer extends Component {
         selectProject={this.selectProject}
         setAPIAlert={this.setAPIAlert}
         isLogoutNeeded={this.props.isLogoutNeeded}
+        isSignInAnOption={this.props.isSignInAnOption}
       >
         <main className={classes.content}>
           <AllureDockerSnackBar

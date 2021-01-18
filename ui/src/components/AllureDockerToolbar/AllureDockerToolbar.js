@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import clsx from "clsx";
 import { fade, withStyles } from "@material-ui/core/styles";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import AddCircle from "@material-ui/icons/AddCircle";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Divider from "@material-ui/core/Divider";
@@ -152,6 +153,10 @@ class AllureDockerToolbar extends Component {
     redirectRoot();
   };
 
+  goToSignIn = () => {
+    this.props.history.push(`/signin`);
+  }
+
   handleAPIErrorAlert = (error) => {
     this.props.setAPIAlert(
       "error",
@@ -188,6 +193,15 @@ class AllureDockerToolbar extends Component {
 
   render() {
     const { classes } = this.props;
+
+    let isSignInAnOption = "";
+    if (this.props.isSignInAnOption) {
+      isSignInAnOption = (
+        <IconButton color="inherit" onClick={this.goToSignIn}>
+          <AccountCircle />
+        </IconButton>
+      );
+    }
 
     let signOutButton = "";
     if (this.props.isLogoutNeeded) {
@@ -244,6 +258,8 @@ class AllureDockerToolbar extends Component {
         <IconButton color="inherit" onClick={this.goToHome}>
           <HomeIcon />
         </IconButton>
+
+        {isSignInAnOption}
 
         <IconButton color="inherit" onClick={this.openNewProjectDialog} disabled={!isAdmin()}>
           <AddCircle />

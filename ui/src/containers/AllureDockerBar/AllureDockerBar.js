@@ -91,6 +91,7 @@ class AllureDockerBar extends Component {
             getProjects={this.props.getProjects}
             setAPIAlert={this.props.setAPIAlert}
             isLogoutNeeded={this.props.isLogoutNeeded}
+            isSignInAnOption={this.props.isSignInAnOption}
           />
         </AppBar>
 
