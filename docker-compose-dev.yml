@@ -10,8 +10,10 @@ services:
         VERSION: "na"
         VCS_REF: "na"
     environment:
-      ALLURE_DOCKER_PUBLIC_API_URL: "http://localhost:5050"
+      ALLURE_DOCKER_PUBLIC_API_URL: "http://localhost:5050" # <-- or any script here if ALLURE_DOCKER_PUBLIC_API_URL_IS_SCRIPT is set, example below
+      #ALLURE_DOCKER_PUBLIC_API_URL: "echo http://$$(curl http://checkip.amazonaws.com)"
       ALLURE_DOCKER_PUBLIC_API_URL_PREFIX: ""
+      #ALLURE_DOCKER_PUBLIC_API_URL_IS_SCRIPT: 1 <-- if specified the url will be parsed as script
       #URL_PREFIX: "/my-prefix"
     ports:
       - "7474:5252"
