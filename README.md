@@ -5,6 +5,7 @@
 # ALLURE-DOCKER-SERVICE UI
 [![](https://github.com/fescobar/allure-docker-service-ui/actions/workflows/docker-publish.yml/badge.svg?branch=master)](https://github.com/fescobar/allure-docker-service-ui/actions?query=branch%3Amaster)
 
+![](https://img.shields.io/docker/pulls/frankescobar/allure-docker-service-ui)
 
 Table of contents
 =================
