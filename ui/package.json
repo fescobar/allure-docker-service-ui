@@ -3,21 +3,24 @@
   "version": "1.0.0",
   "private": true,
   "homepage": ".",
-  "engines" : {
-    "node" : ">=18.3.0"
+  "engines": {
+    "node": ">=18.2.47"
   },
   "dependencies": {
-    "@material-ui/core": "4.12.4",
-    "@material-ui/icons": "4.11.3",
-    "@material-ui/lab": "5.0.0-alpha.44",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.3",
+    "@mui/material": "^5.15.3",
     "axios": "1.6.5",
-    "react": "18.2.0",
+    "clsx": "^2.1.0",
+    "react": "^17.0.2",
     "react-cookie": "7.0.1",
-    "react-dom": "18.2.0",
-    "react-router-dom": "6.21.1",
+    "react-router-dom": "5.3.4",
     "react-scripts": "5.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  },
   "scripts": {
     "start": "generate_env_file.sh && mv env-config.js ./public/ && cp config-dummy.json ./public/config.json && (set PORT=4000 || export PORT=4000) && react-scripts start",
     "build": "react-scripts build",

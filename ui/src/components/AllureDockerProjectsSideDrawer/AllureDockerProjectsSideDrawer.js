@@ -1,15 +1,15 @@
 import React from "react";
 
-import { withStyles, MuiThemeProvider } from "@material-ui/core/styles";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
+import { withStyles, useTheme } from "@mui/material/styles";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
 
 import { Link, withRouter } from "react-router-dom";
 
@@ -67,7 +67,7 @@ const allureDockerProjectsSideDrawer = (props) => {
     >
       <div className={classes.drawerHeader}>
         <IconButton onClick={props.handleSideDrawerClose}>
-          {MuiThemeProvider.direction === "ltr" ? (
+          {useTheme().direction === "ltr" ? (
             <ChevronLeftIcon />
           ) : (
             <React.Fragment>

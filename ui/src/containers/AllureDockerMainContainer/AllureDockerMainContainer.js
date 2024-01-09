@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@mui/material/styles";
 import { withRouter } from "react-router-dom";
 
 import axios from "../../api/axios-allure-docker";

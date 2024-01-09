@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import { setViewerRole } from "./utility/user-actions";
