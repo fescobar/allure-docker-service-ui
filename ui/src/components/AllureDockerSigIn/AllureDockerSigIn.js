@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AccountCircle from "@mui/material/styles";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
