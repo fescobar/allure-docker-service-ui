@@ -15,7 +15,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 yarn.lock
-package-lock.json
 
 /public/env-config.js
 /public/config.json
