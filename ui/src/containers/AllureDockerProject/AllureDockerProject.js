@@ -1,21 +1,21 @@
 import React, { Component } from "react";
 
-import Backdrop from "@material-ui/core/Backdrop";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import FileCopyRounded from "@material-ui/icons/FileCopyRounded";
-import FullscreenIcon from "@material-ui/icons/Fullscreen";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Refresh from "@material-ui/icons/Refresh";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
+import Backdrop from "@mui/material/Backdrop";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CircularProgress from "@mui/material/CircularProgress";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import FileCopyRounded from "@mui/icons-material/FileCopyRounded";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Refresh from "@mui/icons-material/Refresh";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import { withRouter } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@mui/material/styles";
 
 import axios from "../../api/axios-allure-docker";
 import AllureDockerReportsDropDown from "../../components/AllureDockerReportsDropDown/AllureDockerReportsDropDown";

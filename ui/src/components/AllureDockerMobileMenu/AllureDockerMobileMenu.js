@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 
-import IconButton from "@material-ui/core/IconButton";
-import InfoIcon from "@material-ui/icons/Info";
-import LanguageIcon from "@material-ui/icons/Language";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Switch from "@material-ui/core/Switch";
+import IconButton from "@mui/material/IconButton";
+import InfoIcon from "@mui/icons-material/Info";
+import LanguageIcon from "@mui/icons-material/Language";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Switch from "@mui/material/Switch";
 import { withRouter } from "react-router-dom";
 
 import SwaggerLogo from "../../components/SwaggerLogo/SwaggerLogo";

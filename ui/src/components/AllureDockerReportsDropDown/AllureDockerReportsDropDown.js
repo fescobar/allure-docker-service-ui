@@ -1,7 +1,7 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+import { withStyles } from "@mui/material/styles";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const styles = (theme) => ({
   formControl: {

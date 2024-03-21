@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import clsx from "clsx";
-import AppBar from "@material-ui/core/AppBar";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { withStyles } from "@material-ui/core/styles";
+import AppBar from "@mui/material/AppBar";
+import CssBaseline from "@mui/material/CssBaseline";
+import { withStyles } from "@mui/material/styles";
 
 import AllureDockerMobileMenu from "../../components/AllureDockerMobileMenu/AllureDockerMobileMenu";
 import AllureDockerToolbar from "../../components/AllureDockerToolbar/AllureDockerToolbar";
