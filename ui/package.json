@@ -7,14 +7,13 @@
     "@material-ui/core": "4.11.0",
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.56",
-    "axios": "0.21.1",
+    "axios": "^1.19.0",
     "react": "16.13.1",
-    "react-cookie": "4.0.3",
+    "react-cookie": "^8.1.2",
     "react-dom": "16.13.1",
     "react-router-dom": "5.2.0",
-    "react-scripts": "4.0.1"
+    "react-scripts": "^0.0.0"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "generate_env_file.sh && mv env-config.js ./public/ && cp config-dummy.json ./public/config.json && (set PORT=4000 || export PORT=4000) && react-scripts start",
     "build": "react-scripts build",

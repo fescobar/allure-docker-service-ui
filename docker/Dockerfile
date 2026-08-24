@@ -1,13 +1,15 @@
 ######
-FROM node:12.18.3-buster-slim AS builder
+FROM node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32 AS builder
 ENV ROOT=/code
+ENV DISABLE_NEW_JSX_TRANSFORM=true
 WORKDIR $ROOT
 COPY ui $ROOT
 RUN npm install && \
+    npm install --no-save react-scripts@5.0.1 && \
     npm run build
 
 ######
-FROM node:12.18.3-buster-slim
+FROM node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
 ARG BUILD_DATE
 ARG VERSION
 ARG VCS_REF
@@ -22,8 +24,9 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
     org.label-schema.vcs-url="https://github.com/fescobar/allure-docker-service-ui" \
     authors="Frank Escobar <fescobar.systems@gmail.com>"
 
-RUN apt-get update && \
-    apt install curl -y
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache bash curl
 
 ENV ROOT=/app
 
@@ -36,7 +39,8 @@ COPY --chown=node:node ui/generate_env_file.sh $ROOT
 RUN echo "${VERSION}" > $ROOT/ui/ui_version && \
     echo "ALLURE_DOCKER_SERVICE_UI_VERSION:" $(cat $ROOT/ui/ui_version) && \
     chmod +x $ROOT/*.sh && \
-    npm install --prefix $ROOT/ui
+    npm install --prefix $ROOT/ui --omit=dev && \
+    rm -rf /root/.npm /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx /usr/local/lib/node_modules/corepack /usr/local/bin/corepack /opt/yarn*
 
 RUN chown -R node:node $ROOT
 
