@@ -5,7 +5,13 @@ const fs = require("fs");
 const public = __dirname;
 const routerVersion = express.Router();
 const routerConfig = express.Router();
-const urlPrefix = process.env.URL_PREFIX;
+let urlPrefix = process.env.URL_PREFIX ? process.env.URL_PREFIX.trim() : "";
+if (urlPrefix && !urlPrefix.startsWith("/")) {
+  urlPrefix = `/${urlPrefix}`;
+}
+if (urlPrefix.endsWith("/")) {
+  urlPrefix = urlPrefix.slice(0, -1);
+}
 const nativePrefix = "/allure-docker-service-ui";
 let prefix = nativePrefix;
 if (urlPrefix) {
@@ -32,6 +38,9 @@ app.use(express.json());
 
 app.use("/version", routerVersion);
 app.use(`${nativePrefix}/version`, routerVersion);
+if (urlPrefix) {
+  app.use(`${urlPrefix}/version`, routerVersion);
+}
 app.use(`${prefix}/version`, routerVersion);
 routerVersion.get("/", (req, res) => {
   const json = {
@@ -47,6 +56,9 @@ routerVersion.get("/", (req, res) => {
 
 app.use("/config", routerConfig);
 app.use(`${nativePrefix}/config`, routerConfig);
+if (urlPrefix) {
+  app.use(`${urlPrefix}/config`, routerConfig);
+}
 app.use(`${prefix}/config`, routerConfig);
 routerConfig.get("/", (req, res) => {
   const config = JSON.parse(getConfig());
@@ -60,6 +72,10 @@ routerConfig.get("/", (req, res) => {
 });
 
 app.use("/", express.static(public));
+app.use(nativePrefix, express.static(public));
+if (urlPrefix) {
+  app.use(urlPrefix, express.static(public));
+}
 app.use(prefix, express.static(public));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(public, "index.html"));

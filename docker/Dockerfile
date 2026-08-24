@@ -2,6 +2,7 @@
 FROM node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32 AS builder
 ENV ROOT=/code
 ENV DISABLE_NEW_JSX_TRANSFORM=true
+ENV PUBLIC_URL=/URL_PREFIX_PLACEHOLDER
 WORKDIR $ROOT
 COPY ui $ROOT
 RUN npm install && \
@@ -31,12 +32,14 @@ RUN apk update && \
 ENV ROOT=/app
 
 WORKDIR $ROOT
+COPY --chown=node:node --from=builder /code/build $ROOT/ui-template
 COPY --chown=node:node --from=builder /code/build $ROOT/ui
 COPY --chown=node:node server $ROOT/ui
 COPY --chown=node:node scripts $ROOT
 COPY --chown=node:node ui/generate_env_file.sh $ROOT
 
 RUN echo "${VERSION}" > $ROOT/ui/ui_version && \
+    echo "${VERSION}" > $ROOT/ui-template/ui_version && \
     echo "ALLURE_DOCKER_SERVICE_UI_VERSION:" $(cat $ROOT/ui/ui_version) && \
     chmod +x $ROOT/*.sh && \
     npm install --prefix $ROOT/ui --omit=dev && \
@@ -52,4 +55,5 @@ HEALTHCHECK --interval=10s --timeout=60s --retries=3 \
 
 USER node
 
-CMD $ROOT/run.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["/app/run.sh"]
