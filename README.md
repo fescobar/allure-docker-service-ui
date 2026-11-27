@@ -39,7 +39,7 @@ Allure Docker Service UI provides a friendly user interface for [frankescobar/al
 Docker container versions are publish on [https://github.com/fescobar/allure-docker-service-ui/releases](https://github.com/fescobar/allure-docker-service-ui/releases)
 
 #### Image Variants
-Allure Docker Service supports architectures amd64, arm/v7 and arm64.
+Allure Docker Service supports architectures amd64 and arm64.
 
 - Tags: https://hub.docker.com/r/frankescobar/allure-docker-service-ui/tags
 
