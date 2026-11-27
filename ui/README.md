@@ -3,7 +3,7 @@
 ## Start API
 - From root directory
 ```sh
-docker-compose -f docker-compose-dev.yml up allure
+docker compose -f docker-compose-dev.yml up -d --force-recreate
 ```
 
 

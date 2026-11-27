@@ -1,45 +1,22 @@
 import React from "react";
 
-import { withStyles, MuiThemeProvider } from "@material-ui/core/styles";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import { ThemeProvider } from "@mui/material/styles";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
 
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
-const styles = (theme) => ({
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
-  },
-  title: {
-    display: "block",
-    [theme.breakpoints.up("sm")]: {
-      display: "none",
-    },
-  },
-});
 
-const allureDockerProjectsSideDrawer = (props) => {
-  const { classes } = props;
-
+function AllureDockerProjectsSideDrawer(props) {
   const elements = [];
   for (let key in props.projects) {
     elements.push(
@@ -48,43 +25,58 @@ const allureDockerProjectsSideDrawer = (props) => {
         key={key}
         style={{ color: "inherit", textDecoration: "inherit" }}
       >
-        <ListItem button id={key} onClick={() => props.selectProject(key)}>
+        <ListItemButton id={key} onClick={() => props.selectProject(key)}>
           <ListItemText primary={key} />
-        </ListItem>
+        </ListItemButton>
       </Link>
     );
   }
 
   return (
     <Drawer
-      className={classes.drawer}
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+        },
+      }}
       variant="persistent"
       anchor="left"
       open={props.isSideDrawerOpen}
-      classes={{
-        paper: classes.drawerPaper,
-      }}
     >
-      <div className={classes.drawerHeader}>
+      <Box
+        sx={(theme) => ({
+          display: "flex",
+          alignItems: "center",
+          px: 1,
+          ...theme.mixins.toolbar,
+          justifyContent: "flex-end",
+        })}
+      >
         <IconButton onClick={props.handleSideDrawerClose}>
-          {MuiThemeProvider.direction === "ltr" ? (
+          {ThemeProvider.direction === "ltr" ? (
             <ChevronLeftIcon />
           ) : (
             <React.Fragment>
-              <Typography className={classes.title} variant="subtitle1" noWrap>
+              <Typography
+                sx={{
+                  display: { xs: "block", sm: "none" },
+                }}
+                variant="subtitle1"
+                noWrap
+              >
                 {props.title}
               </Typography>
               <ChevronRightIcon />
             </React.Fragment>
           )}
         </IconButton>
-      </div>
+      </Box>
       <Divider />
       <List>{elements}</List>
     </Drawer>
   );
-};
+}
 
-export default withStyles(styles, { withTheme: true })(
-  withRouter(allureDockerProjectsSideDrawer)
-);
+export default AllureDockerProjectsSideDrawer;

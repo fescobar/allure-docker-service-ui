@@ -4,22 +4,27 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@material-ui/core": "4.11.0",
-    "@material-ui/icons": "4.9.1",
-    "@material-ui/lab": "4.0.0-alpha.56",
-    "axios": "0.21.1",
-    "react": "16.13.1",
-    "react-cookie": "4.0.3",
-    "react-dom": "16.13.1",
-    "react-router-dom": "5.2.0",
-    "react-scripts": "4.0.1"
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@mui/icons-material": "9.6.0",
+    "@mui/material": "9.6.0",
+    "axios": "1.21.1",
+    "react": "19.3.1",
+    "react-cookie": "8.1.2",
+    "react-dom": "19.3.1",
+    "react-router-dom": "7.18.7"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@vitejs/plugin-react": "6.3.0",
+    "jsdom": "31.0.1",
+    "vite": "8.4.0",
+    "vitest": "5.1.2"
+  },
   "scripts": {
-    "start": "generate_env_file.sh && mv env-config.js ./public/ && cp config-dummy.json ./public/config.json && (set PORT=4000 || export PORT=4000) && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "generate_env_file.sh && mv env-config.js ./public/ && cp config-dummy.json ./public/config.json && vite --port 4000",
+    "build": "vite build",
+    "test": "vitest run",
+    "preview": "vite preview"
   },
   "browserslist": {
     "production": [

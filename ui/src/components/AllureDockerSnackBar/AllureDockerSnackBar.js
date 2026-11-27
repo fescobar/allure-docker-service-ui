@@ -1,42 +1,33 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Alert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
+import React from "react";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Snackbar from "@mui/material/Snackbar";
 
-const styles = (theme) => ({
-  root: {
-    width: "100%",
-    "& > * + *": {
-      marginTop: theme.spacing(2),
-    },
-  },
-});
+function AllureDockerSnackBar(props) {
+  const { show, duration, severity, message, resetAPIAlert } = props;
 
-class AllureDockerSnackBar extends Component {
-  handleClose = (event, reason) => {
+  const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
 
-    this.props.resetAPIAlert();
+    resetAPIAlert();
   };
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.root}>
-        <Snackbar
-          open={this.props.show}
-          autoHideDuration={this.props.duration}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          onClose={this.handleClose}
-        >
-          <Alert severity={this.props.severity} onClose={this.handleClose}>
-            {this.props.message}
-          </Alert>
-        </Snackbar>
-      </div>
-    );
-  }
+  return (
+    <Box sx={{ width: "100%", "& > * + *": { mt: 2 } }}>
+      <Snackbar
+        open={show}
+        autoHideDuration={duration}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        onClose={handleClose}
+      >
+        <Alert severity={severity} onClose={handleClose}>
+          {message}
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
 }
-export default withStyles(styles, { withTheme: true })(AllureDockerSnackBar);
+
+export default AllureDockerSnackBar;

@@ -1,92 +1,76 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
-import IconButton from "@material-ui/core/IconButton";
-import InfoIcon from "@material-ui/icons/Info";
-import LanguageIcon from "@material-ui/icons/Language";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Switch from "@material-ui/core/Switch";
-import { withRouter } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import InfoIcon from "@mui/icons-material/Info";
+import LanguageIcon from "@mui/icons-material/Language";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Switch from "@mui/material/Switch";
 
 import SwaggerLogo from "../../components/SwaggerLogo/SwaggerLogo";
 import AllureDockerInfoDialog from "../../components/AllureDockerInfoDialog/AllureDockerInfoDialog";
 import AllureDockerLanguagesMenu from "../../components/AllureDockerLanguagesMenu/AllureDockerLanguagesMenu";
 
-class AllureDockerMobileMenu extends Component {
-  state = {
-    infoDialog: false,
-    languagesAnchorEl: null,
-  };
+function AllureDockerMobileMenu(props) {
+  const [infoDialog, setInfoDialog] = useState(false);
+  const [languagesAnchorEl, setLanguagesAnchorEl] = useState(null);
 
-  openInfoDialog = () => {
-    this.setState({ infoDialog: true });
-  };
+  const openInfoDialog = () => setInfoDialog(true);
+  const closeInfoDialog = () => setInfoDialog(false);
+  const closeLanguagesMenu = () => setLanguagesAnchorEl(null);
+  const openLanguagesMenu = (event) => setLanguagesAnchorEl(event.currentTarget);
 
-  closeInfoDialog = () => {
-    this.setState({ infoDialog: false });
-  };
-
-  closeLanguagesMenu = () => {
-    this.setState({ languagesAnchorEl: null });
-  };
-
-  openLanguagesMenu = (event) => {
-    this.setState({ languagesAnchorEl: event.currentTarget });
-  };
-
-  goToSwagger = () => {
+  const goToSwagger = () => {
     window.open(`${window._env_.ALLURE_DOCKER_API_URL}/swagger`, "_blank");
   };
 
-  render() {
-    return (
-      <React.Fragment>
-        <Menu
-          anchorEl={this.props.anchorEl}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          id="primary-search-account-menu-mobile"
-          keepMounted
-          transformOrigin={{ vertical: "top", horizontal: "right" }}
-          open={this.props.isMobileMenuOpen}
-          onClose={this.props.handleMobileMenuClose}
-        >
-          <MenuItem>
-            <Switch
-              checked={this.props.darkState}
-              onChange={this.props.handleThemeChange}
-            />
-            <p>Dark Mode</p>
-          </MenuItem>
-          <MenuItem onClick={this.openLanguagesMenu}>
-            <IconButton color="inherit">
-              <LanguageIcon />
-            </IconButton>
-            <p>Language</p>
-          </MenuItem>
-          <MenuItem onClick={this.openInfoDialog}>
-            <IconButton color="inherit">
-              <InfoIcon />
-            </IconButton>
-            <p>Info</p>
-          </MenuItem>
-          <MenuItem onClick={this.goToSwagger}>
-            <IconButton color="inherit">
-              <SwaggerLogo height="100%" />
-            </IconButton>
-            <p>Swagger Doc</p>
-          </MenuItem>
-        </Menu>
-        <AllureDockerInfoDialog
-          open={this.state.infoDialog}
-          handleCloseDialog={this.closeInfoDialog}
-        />
-        <AllureDockerLanguagesMenu
-          closeLanguagesMenu={this.closeLanguagesMenu}
-          anchorEl={this.state.languagesAnchorEl}
-        />
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <Menu
+        anchorEl={props.anchorEl}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        id="primary-search-account-menu-mobile"
+        keepMounted
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={props.isMobileMenuOpen}
+        onClose={props.handleMobileMenuClose}
+      >
+        <MenuItem>
+          <Switch
+            checked={props.darkState}
+            onChange={props.handleThemeChange}
+          />
+          <p>Dark Mode</p>
+        </MenuItem>
+        <MenuItem onClick={openLanguagesMenu}>
+          <IconButton color="inherit">
+            <LanguageIcon />
+          </IconButton>
+          <p>Language</p>
+        </MenuItem>
+        <MenuItem onClick={openInfoDialog}>
+          <IconButton color="inherit">
+            <InfoIcon />
+          </IconButton>
+          <p>Info</p>
+        </MenuItem>
+        <MenuItem onClick={goToSwagger}>
+          <IconButton color="inherit">
+            <SwaggerLogo height="100%" />
+          </IconButton>
+          <p>Swagger Doc</p>
+        </MenuItem>
+      </Menu>
+      <AllureDockerInfoDialog
+        open={infoDialog}
+        handleCloseDialog={closeInfoDialog}
+      />
+      <AllureDockerLanguagesMenu
+        closeLanguagesMenu={closeLanguagesMenu}
+        anchorEl={languagesAnchorEl}
+      />
+    </React.Fragment>
+  );
 }
 
-export default withRouter(AllureDockerMobileMenu);
+export default AllureDockerMobileMenu;

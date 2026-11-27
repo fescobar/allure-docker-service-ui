@@ -1,36 +1,20 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
-const styles = (theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-    maxWidth: 1000,
-  },
-  chips: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  chip: {
-    margin: 2,
-  },
-  noLabel: {
-    marginTop: theme.spacing(3),
-  },
-});
-
-const allureDockerReportsDropDown = (props) => {
-  const { classes } = props;
+function AllureDockerReportsDropDown(props) {
   return (
-    <FormControl className={classes.formControl}>
+    <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 120, maxWidth: 1000 }}>
       <Select
         native
+        variant="outlined"
+        size="small"
         value={props.reportSelected}
         onChange={props.selectReport}
-        inputProps={{
-          id: "select-multiple-native",
+        slotProps={{
+          input: {
+            id: "select-multiple-native",
+          },
         }}
       >
         {props.reports.map((report) => (
@@ -41,7 +25,6 @@ const allureDockerReportsDropDown = (props) => {
       </Select>
     </FormControl>
   );
-};
-export default withStyles(styles, { withTheme: true })(
-  allureDockerReportsDropDown
-);
+}
+
+export default AllureDockerReportsDropDown;
