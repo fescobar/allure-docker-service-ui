@@ -1,14 +1,11 @@
-import React, { Component } from "react";
-import Backdrop from "@material-ui/core/Backdrop";
-import { withStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
-import { withRouter } from "react-router-dom";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Switch from "@material-ui/core/Switch";
-import Select from "@material-ui/core/Select";
-import IconButton from "@material-ui/core/IconButton";
-import HomeIcon from "@material-ui/icons/Home";
+import React, { useCallback, useEffect, useState } from "react";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import HomeIcon from "@mui/icons-material/Home";
+import IconButton from "@mui/material/IconButton";
+import Select from "@mui/material/Select";
+import Switch from "@mui/material/Switch";
+import { useNavigate, useParams } from "react-router-dom";
 
 import AllureDockerErrorPage from "../../components/AllureDockerErrorPage/AllureDockerErrorPage";
 import axios from "../../api/axios-allure-docker";
@@ -41,182 +38,96 @@ const optionsSeconds = [
   { seconds: 86400, text: "24 hours" },
 ];
 
-const styles = (theme) => ({
-  cardMedia: {
-    height: 1000,
-  },
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: "#fff",
-  },
-});
+function AllureDockerReportFullView() {
+  const { id: projectId, reportId } = useParams();
+  const navigate = useNavigate();
 
-class AllureDockerReportFullView extends Component {
-  intervalID;
-  constructor(props) {
-    super(props);
-    this.state = this.initialState;
-  }
+  const [report, setReport] = useState({ projectId: null, id: null });
+  const [error, setError] = useState(null);
+  const [reloadEnable, setReloadEnable] = useState(false);
+  const [autoRefreshSeconds, setAutoRefreshSeconds] = useState(
+    optionsSeconds[0].seconds
+  );
 
-  get initialState() {
-    return {
-      report: {
-        projectId: null,
-        id: null,
-      },
-      error: null,
-      reloadEnable: false,
-      autoRefreshSeconds: optionsSeconds[0].seconds,
-    };
-  }
-
-  getReport = () => {
-    const projectId = this.props.match.params.id;
-    const reportId = this.props.match.params.reportId;
+  const getReport = useCallback(() => {
     axios
       .get(
         `/projects/${projectId}/reports/${reportId}/index.html?redirect=false`
       )
-      .then((response) => {
-        const report = { ...this.state.report };
-        report.projectId = projectId;
-        report.id = reportId;
-        this.setState({ report: report, error: null });
+      .then(() => {
+        setReport({ projectId, id: reportId });
+        setError(null);
       })
-      .catch((error) => {
-        redirect(error);
-        this.setState({ report: null, error: error });
+      .catch((err) => {
+        redirect(err);
+        setReport(null);
+        setError(err);
       });
-  };
+  }, [projectId, reportId]);
 
-  componentDidMount() {
-    this.getReport();
-  }
+  useEffect(() => {
+    getReport();
+  }, [getReport]);
 
-  componentDidUpdate() {
-    this.handleReloadSwitch();
-  }
-
-  componentWillUnmount() {
-    this.disableReload();
-  }
-
-  handleSwitch = () => {
-    this.setState({ reloadEnable: !this.state.reloadEnable });
-  };
-
-  handleReloadSwitch = () => {
-    if (this.state.reloadEnable) {
-      this.enableReload();
-    } else {
-      this.disableReload();
+  useEffect(() => {
+    if (!reloadEnable) {
+      return undefined;
     }
-  };
+    const intervalId = setInterval(() => {
+      setReport(null);
+      setError(null);
+      getReport();
+    }, autoRefreshSeconds * 1000);
+    return () => clearInterval(intervalId);
+  }, [reloadEnable, autoRefreshSeconds, getReport]);
 
-  enableReload = () => {
-    if (!this.intervalID) {
-      this.intervalID = setInterval(
-        this.reloadReport.bind(this),
-        this.state.autoRefreshSeconds * 1000
-      );
-    }
-  };
+  let content = "";
+  if (report && report.projectId && report.id) {
+    const reportIframe = `${window._env_.ALLURE_DOCKER_API_URL}/projects/${report.projectId}/reports/${report.id}/index.html?redirect=false`;
+    content = (
+      <Card>
+        <div align="right">
+          <IconButton color="inherit" onClick={() => navigate("/")}>
+            <HomeIcon />
+          </IconButton>
 
-  disableReload = () => {
-    clearInterval(this.intervalID);
-    this.intervalID = undefined;
-  };
-
-  reloadReport = () => {
-    this.setState({ report: null, error: null });
-    this.getReport();
-  };
-
-  handleAutoRefreshSeconds = (event) => {
-    const seconds = event.target.value;
-    this.setState({ autoRefreshSeconds: seconds });
-    this.disableReload();
-  };
-
-  goToHome = () => {
-    this.props.history.push("/");
-  };
-
-  render() {
-    const { classes } = this.props;
-
-    let options = [];
-    for (let option of optionsSeconds) {
-      options.push(
-        <option key={option.seconds} value={option.seconds}>
-          {option.text}
-        </option>
-      );
-    }
-
-    let progress = "";
-    if (this.state.progress) {
-      progress = (
-        <Backdrop open={true} className={classes.backdrop}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      );
-    }
-
-    let content = "";
-    if (
-      this.state.report &&
-      this.state.report.projectId &&
-      this.state.report.id
-    ) {
-      const reportIframe = `${window._env_.ALLURE_DOCKER_API_URL}/projects/${this.state.report.projectId}/reports/${this.state.report.id}/index.html?redirect=false`;
-      content = (
-        <Card>
-          <div align="right">
-            <IconButton color="inherit" onClick={this.goToHome}>
-              <HomeIcon />
-            </IconButton>
-
-            {this.state.report.id === "latest" ? (
-              <React.Fragment>
-                Auto Refresh
-                <Switch
-                  checked={this.state.reloadEnable}
-                  onChange={this.handleSwitch}
-                />
-                <Select
-                  native
-                  value={this.state.autoRefreshSeconds}
-                  onChange={this.handleAutoRefreshSeconds}
-                  disabled={!this.state.reloadEnable}
-                >
-                  {options}
-                </Select>
-              </React.Fragment>
-            ) : null}
-          </div>
-          <CardMedia
-            className={classes.cardMedia}
-            component="iframe"
-            image={reportIframe}
-            title="Allure Report"
-          ></CardMedia>
-        </Card>
-      );
-    }
-
-    if (this.state.error) {
-      content = <AllureDockerErrorPage error={this.state.error} />;
-    }
-
-    return (
-      <React.Fragment>
-        {progress}
-        {content}
-      </React.Fragment>
+          {report.id === "latest" ? (
+            <React.Fragment>
+              Auto Refresh
+              <Switch
+                checked={reloadEnable}
+                onChange={() => setReloadEnable((prev) => !prev)}
+              />
+              <Select
+                native
+                value={autoRefreshSeconds}
+                onChange={(event) => setAutoRefreshSeconds(event.target.value)}
+                disabled={!reloadEnable}
+              >
+                {optionsSeconds.map((option) => (
+                  <option key={option.seconds} value={option.seconds}>
+                    {option.text}
+                  </option>
+                ))}
+              </Select>
+            </React.Fragment>
+          ) : null}
+        </div>
+        <CardMedia
+          sx={{ height: 1000 }}
+          component="iframe"
+          image={reportIframe}
+          title="Allure Report"
+        />
+      </Card>
     );
   }
+
+  if (error) {
+    content = <AllureDockerErrorPage error={error} />;
+  }
+
+  return <React.Fragment>{content}</React.Fragment>;
 }
-export default withStyles(styles, { withTheme: true })(
-  withRouter(AllureDockerReportFullView)
-);
+
+export default AllureDockerReportFullView;

@@ -1,24 +1,24 @@
-import React, { Component } from "react";
-import clsx from "clsx";
-import { fade, withStyles } from "@material-ui/core/styles";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import AddCircle from "@material-ui/icons/AddCircle";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import Divider from "@material-ui/core/Divider";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import HomeIcon from "@material-ui/icons/Home";
-import IconButton from "@material-ui/core/IconButton";
-import InfoIcon from "@material-ui/icons/Info";
-import LanguageIcon from "@material-ui/icons/Language";
-import MenuIcon from "@material-ui/icons/Menu";
-import MoreIcon from "@material-ui/icons/MoreVert";
-import SearchIcon from "@material-ui/icons/Search";
-import SettingsIcon from "@material-ui/icons/Settings";
-import Switch from "@material-ui/core/Switch";
-import TextField from "@material-ui/core/TextField";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import { withRouter } from "react-router-dom";
+import React, { useState } from "react";
+import Box from "@mui/material/Box";
+import { alpha } from "@mui/material/styles";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import AddCircle from "@mui/icons-material/AddCircle";
+import Autocomplete from "@mui/material/Autocomplete";
+import Divider from "@mui/material/Divider";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import HomeIcon from "@mui/icons-material/Home";
+import IconButton from "@mui/material/IconButton";
+import InfoIcon from "@mui/icons-material/Info";
+import LanguageIcon from "@mui/icons-material/Language";
+import MenuIcon from "@mui/icons-material/Menu";
+import MoreIcon from "@mui/icons-material/MoreVert";
+import SearchIcon from "@mui/icons-material/Search";
+import SettingsIcon from "@mui/icons-material/Settings";
+import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
 import { isAdmin } from "../../utility/user-actions";
 
 import SwaggerLogo from "../../components/SwaggerLogo/SwaggerLogo";
@@ -31,311 +31,240 @@ import AllureDockerSignOutDialog from "../AllureDockerSignOutDialog/AllureDocker
 import { redirect, redirectRoot } from "../../utility/navigate";
 import axios from "../../api/axios-allure-docker";
 
-const styles = (theme) => ({
-  grow: {
-    flexGrow: 1,
-  },
-  title: {
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-    },
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  searchTextField: {
-    color: "inherit",
-    padding: theme.spacing(0.5),
-    paddingLeft: `calc(1em + ${theme.spacing(5)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "40ch",
-    },
-  },
-  sectionDesktop: {
-    display: "none",
-    [theme.breakpoints.up("md")]: {
-      display: "flex",
-    },
-  },
-  sectionMobile: {
-    display: "flex",
-    [theme.breakpoints.up("md")]: {
-      display: "none",
-    },
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  hide: {
-    display: "none",
-  },
-});
+function AllureDockerToolbar(props) {
+  const navigate = useNavigate();
+  const [newProjectDialog, setNewProjectDialog] = useState(false);
+  const [configDialog, setConfigDialog] = useState(false);
+  const [signOutDialog, setSignOutDialog] = useState(false);
+  const [infoDialog, setInfoDialog] = useState(false);
+  const [languagesAnchorEl, setLanguagesAnchorEl] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
 
-class AllureDockerToolbar extends Component {
-  state = {
-    newProjectDialog: false,
-    configDialog: false,
-    signOutDialog: false,
-    infoDialog: false,
-    languagesAnchorEl: null,
-    searchResults: [],
-  };
-
-  openNewProjectDialog = () => {
-    this.setState({ newProjectDialog: true });
-  };
-
-  closeNewProjectDialog = () => {
-    this.setState({ newProjectDialog: false });
-  };
-
-  openConfigDialog = () => {
-    this.setState({ configDialog: true });
-  };
-
-  closeConfigDialog = () => {
-    this.setState({ configDialog: false });
-  };
-
-  openSignOutDialog = () => {
-    this.setState({ signOutDialog: true });
-  };
-
-  closeSignOutDialog = () => {
-    this.setState({ signOutDialog: false });
-  };
-
-  openInfoDialog = () => {
-    this.setState({ infoDialog: true });
-  };
-
-  closeInfoDialog = () => {
-    this.setState({ infoDialog: false });
-  };
-
-  closeLanguagesMenu = () => {
-    this.setState({ languagesAnchorEl: null });
-  };
-
-  openLanguagesMenu = (event) => {
-    this.setState({ languagesAnchorEl: event.currentTarget });
-  };
-
-  goToSwagger = () => {
+  const goToSwagger = () => {
     window.open(`${window._env_.ALLURE_DOCKER_API_URL}/swagger`, "_blank");
   };
 
-  goToHome = () => {
-    redirectRoot();
-  };
-
-  goToSignIn = () => {
-    this.props.history.push(`/signin`);
-  }
-
-  handleAPIErrorAlert = (error) => {
-    this.props.setAPIAlert(
+  const handleAPIErrorAlert = (error) => {
+    props.setAPIAlert(
       "error",
       `Something wrong => ${error.message}`,
       true
     );
   };
 
-  handleSearch = (event, id) => {
+  const handleSearch = (event, id) => {
     axios
       .get(`/projects/search?id=${id}`)
       .then((response) => {
         const projects = response.data.data.projects;
-        const searchResults = [];
-        for (const id in projects) {
-          searchResults.push(id);
-        }
-        this.setState({ searchResults: searchResults });
+        setSearchResults(Object.keys(projects));
       })
       .catch((error) => {
         redirect(error);
         if (error.status !== 404) {
-          this.handleAPIErrorAlert(error);
+          handleAPIErrorAlert(error);
         }
-        this.setState({ searchResults: [] });
+        setSearchResults([]);
       });
   };
 
-  handleSearchValue = (event, value) => {
+  const handleSearchValue = (event, value) => {
     if (value) {
-      this.props.history.push(`/projects/${value}`);
+      navigate(`/projects/${value}`);
     }
   };
 
-  render() {
-    const { classes } = this.props;
+  return (
+    <Toolbar>
+      <IconButton
+        color="inherit"
+        aria-label="open drawer"
+        onClick={props.handleSideDrawerOpen}
+        edge="start"
+        sx={{
+          mr: 2,
+          ...(props.isSideDrawerOpen && { display: "none" }),
+        }}
+      >
+        <MenuIcon />
+      </IconButton>
 
-    let isSignInAnOption = "";
-    if (this.props.isSignInAnOption) {
-      isSignInAnOption = (
-        <IconButton color="inherit" onClick={this.goToSignIn}>
+      <Typography
+        sx={{ display: { xs: "none", sm: "block" } }}
+        variant="h6"
+        noWrap
+      >
+        {props.title}
+      </Typography>
+
+      <Box
+        sx={(theme) => ({
+          position: "relative",
+          borderRadius: `${theme.shape.borderRadius}px`,
+          backgroundColor: alpha(theme.palette.common.white, 0.15),
+          "&:hover": {
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
+          },
+          mr: 2,
+          ml: { xs: 0, sm: 3 },
+          width: { xs: "100%", sm: "auto" },
+        })}
+      >
+        <Box
+          sx={{
+            px: 2,
+            height: "100%",
+            position: "absolute",
+            pointerEvents: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <SearchIcon />
+        </Box>
+        <Autocomplete
+          sx={(theme) => ({
+            color: "inherit",
+            p: 0.5,
+            pl: `calc(1em + ${theme.spacing(5)})`,
+            transition: theme.transitions.create("width"),
+            width: { xs: "100%", md: "40ch" },
+          })}
+          options={searchResults}
+          onInputChange={handleSearch}
+          onChange={handleSearchValue}
+          noOptionsText={"project not found"}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              placeholder="Project ID..."
+              margin="none"
+              variant="standard"
+              slotProps={{
+                ...params.slotProps,
+                input: {
+                  ...params.slotProps?.input,
+                  disableUnderline: true,
+                },
+              }}
+            />
+          )}
+        />
+      </Box>
+
+      <Box sx={{ flexGrow: 1 }} />
+
+      <IconButton color="inherit" onClick={redirectRoot}>
+        <HomeIcon />
+      </IconButton>
+
+      {props.isSignInAnOption ? (
+        <IconButton color="inherit" onClick={() => navigate("/signin")}>
           <AccountCircle />
         </IconButton>
-      );
-    }
+      ) : null}
 
-    let signOutButton = "";
-    if (this.props.isLogoutNeeded) {
-      signOutButton = (
-        <IconButton color="inherit" onClick={this.openSignOutDialog}>
+      <IconButton
+        color="inherit"
+        onClick={() => setNewProjectDialog(true)}
+        disabled={!isAdmin()}
+      >
+        <AddCircle />
+      </IconButton>
+
+      <IconButton color="inherit" onClick={() => setConfigDialog(true)}>
+        <SettingsIcon />
+      </IconButton>
+
+      {props.isLogoutNeeded ? (
+        <IconButton color="inherit" onClick={() => setSignOutDialog(true)}>
           <ExitToAppIcon />
         </IconButton>
-      );
-    }
+      ) : null}
+      <Divider orientation="vertical" flexItem />
 
-    return (
-      <Toolbar>
+      <Box sx={{ display: { xs: "none", md: "flex" } }}>
+        <IconButton color="inherit">
+          <Switch
+            checked={props.darkState}
+            onChange={props.handleThemeChange}
+            sx={{
+              "& .MuiSwitch-thumb": {
+                backgroundColor: props.darkState ? "#38bdf8" : "#ffffff",
+              },
+              "& .MuiSwitch-track": {
+                backgroundColor: props.darkState
+                  ? "rgba(56, 189, 248, 0.45)"
+                  : "rgba(255, 255, 255, 0.45)",
+                opacity: 1,
+              },
+              "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                backgroundColor: props.darkState
+                  ? "rgba(56, 189, 248, 0.55)"
+                  : "rgba(255, 255, 255, 0.55)",
+                opacity: 1,
+              },
+            }}
+          />
+        </IconButton>
+
         <IconButton
           color="inherit"
-          aria-label="open drawer"
-          onClick={this.props.handleSideDrawerOpen}
-          edge="start"
-          className={clsx(
-            classes.menuButton,
-            this.props.isSideDrawerOpen && classes.hide
-          )}
+          onClick={(event) => setLanguagesAnchorEl(event.currentTarget)}
         >
-          <MenuIcon />
+          <LanguageIcon />
         </IconButton>
 
-        <Typography className={classes.title} variant="h6" noWrap>
-          {this.props.title}
-        </Typography>
-
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
-          <Autocomplete
-            className={classes.searchTextField}
-            options={this.state.searchResults}
-            onInputChange={this.handleSearch}
-            onChange={this.handleSearchValue}
-            noOptionsText={'project not found'}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="Project ID..."
-                margin="none"
-                variant="standard"
-                InputProps={{ ...params.InputProps, disableUnderline: true }}
-              />
-            )}
-          />
-        </div>
-
-        <div className={classes.grow} />
-
-        <IconButton color="inherit" onClick={this.goToHome}>
-          <HomeIcon />
-        </IconButton>
-
-        {isSignInAnOption}
-
-        <IconButton color="inherit" onClick={this.openNewProjectDialog} disabled={!isAdmin()}>
-          <AddCircle />
-        </IconButton>
-
-        <IconButton color="inherit" onClick={this.openConfigDialog}>
-          <SettingsIcon />
-        </IconButton>
-
-        {signOutButton}
         <Divider orientation="vertical" flexItem />
 
-        <div className={classes.sectionDesktop}>
-          <IconButton color="inherit">
-            <Switch
-              checked={this.props.darkState}
-              onChange={this.props.handleThemeChange}
-            />
-          </IconButton>
+        <IconButton color="inherit" onClick={() => setInfoDialog(true)}>
+          <InfoIcon />
+        </IconButton>
 
-          <IconButton color="inherit" onClick={this.openLanguagesMenu}>
-            <LanguageIcon />
-          </IconButton>
+        <IconButton color="inherit" onClick={goToSwagger}>
+          <SwaggerLogo height="100%" />
+        </IconButton>
+      </Box>
 
-          <Divider orientation="vertical" flexItem />
-
-          <IconButton color="inherit" onClick={this.openInfoDialog}>
-            <InfoIcon />
-          </IconButton>
-
-          <IconButton color="inherit" onClick={this.goToSwagger}>
-            <SwaggerLogo height="100%" />
-          </IconButton>
-        </div>
-
-        <div className={classes.sectionMobile}>
-          <IconButton
-            aria-label="show more"
-            aria-controls="primary-search-account-menu-mobile"
-            aria-haspopup="true"
-            onClick={this.props.handleMobileMenuOpen}
-            color="inherit"
-          >
-            <MoreIcon />
-          </IconButton>
-          <AllureDockerNewProjectDialog
-            setAPIAlert={this.props.setAPIAlert}
-            open={this.state.newProjectDialog}
-            closeNewProjectDialog={this.closeNewProjectDialog}
-            getProjects={this.props.getProjects}
-          />
-          <AllureDockerConfigDialog
-            setAPIAlert={this.props.setAPIAlert}
-            open={this.state.configDialog}
-            closeConfigDialog={this.closeConfigDialog}
-          />
-          <AllureDockerSignOutDialog
-            setAPIAlert={this.props.setAPIAlert}
-            open={this.state.signOutDialog}
-            closeSignOutDialog={this.closeSignOutDialog}
-          />
-          <AllureDockerInfoDialog
-            open={this.state.infoDialog}
-            handleCloseDialog={this.closeInfoDialog}
-          />
-          <AllureDockerLanguagesMenu
-            setAPIAlert={this.props.setAPIAlert}
-            closeLanguagesMenu={this.closeLanguagesMenu}
-            anchorEl={this.state.languagesAnchorEl}
-          />
-        </div>
-      </Toolbar>
-    );
-  }
+      <Box sx={{ display: { xs: "flex", md: "none" } }}>
+        <IconButton
+          aria-label="show more"
+          aria-controls="primary-search-account-menu-mobile"
+          aria-haspopup="true"
+          onClick={props.handleMobileMenuOpen}
+          color="inherit"
+        >
+          <MoreIcon />
+        </IconButton>
+        <AllureDockerNewProjectDialog
+          setAPIAlert={props.setAPIAlert}
+          open={newProjectDialog}
+          closeNewProjectDialog={() => setNewProjectDialog(false)}
+          getProjects={props.getProjects}
+        />
+        <AllureDockerConfigDialog
+          setAPIAlert={props.setAPIAlert}
+          open={configDialog}
+          closeConfigDialog={() => setConfigDialog(false)}
+        />
+        <AllureDockerSignOutDialog
+          setAPIAlert={props.setAPIAlert}
+          open={signOutDialog}
+          closeSignOutDialog={() => setSignOutDialog(false)}
+        />
+        <AllureDockerInfoDialog
+          open={infoDialog}
+          handleCloseDialog={() => setInfoDialog(false)}
+        />
+        <AllureDockerLanguagesMenu
+          setAPIAlert={props.setAPIAlert}
+          closeLanguagesMenu={() => setLanguagesAnchorEl(null)}
+          anchorEl={languagesAnchorEl}
+        />
+      </Box>
+    </Toolbar>
+  );
 }
 
-export default withStyles(styles, { withTheme: true })(
-  withRouter(AllureDockerToolbar)
-);
+export default AllureDockerToolbar;

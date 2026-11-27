@@ -20,12 +20,12 @@ jobs:
 
     steps:
       - name: Pulling code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
       - name: Preparing
         id: prepare
         run: |
-          DOCKER_PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7
+          DOCKER_PLATFORMS=linux/amd64,linux/arm64
           VERSION=na
           TAGS="--tag ${DOCKER_IMAGE}:na"
 
@@ -38,22 +38,22 @@ jobs:
             fi
           fi
 
-          echo ::set-output name=docker_image::${DOCKER_IMAGE}
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=buildx_args::--platform ${DOCKER_PLATFORMS} \
+          {
+            echo "docker_image=${DOCKER_IMAGE}"
+            echo "version=${VERSION}"
+            echo "buildx_args=--platform ${DOCKER_PLATFORMS} \
             --build-arg VERSION=${VERSION} \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             --build-arg VCS_REF=${GITHUB_SHA::8} \
-            ${TAGS} --file docker/Dockerfile .
+            ${TAGS} --file docker/Dockerfile ."
+          } >> "$GITHUB_OUTPUT"
 
       - name: Setting up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v4
 
       - name: Setting up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          version: latest
+        uses: docker/setup-buildx-action@v4
 
       - name: Docker Building
         run: |
@@ -61,9 +61,9 @@ jobs:
 
       - name: DockerHub Login
         if: success() && startsWith(github.ref, 'refs/tags/v')
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
+          username: ${{ vars.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
 
       - name: Docker Publishing

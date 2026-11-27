@@ -1,20 +1,19 @@
-import React, { Component } from "react";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Container from "@material-ui/core/Container";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import HomeIcon from "@material-ui/icons/Home";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import Link from "@material-ui/core/Link";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import { withStyles } from "@material-ui/core/styles";
-import { withRouter } from "react-router-dom";
+import React, { useState } from "react";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import FormHelperText from "@mui/material/FormHelperText";
+import HomeIcon from "@mui/icons-material/Home";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useNavigate } from "react-router-dom";
 import { setRoles } from "../../utility/user-actions";
 import { redirectRoot } from "../../utility/navigate";
 
@@ -37,53 +36,19 @@ function Copyright() {
   );
 }
 
-const styles = (theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-  error: {
-    color: theme.palette.secondary.main,
-  },
-});
+function AllureDockerSignIn(props) {
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-class AllureDockerSignIn extends Component {
-  constructor(props) {
-    super(props);
-    this.state = this.initialState;
-  }
-
-  get initialState() {
-    return {
-      error: false,
-      errorMessage: "",
-      userTextField: {
-        value: "",
-      },
-      passTextField: {
-        value: "",
-        show: false,
-      },
-    };
-  }
-
-  componentDidMount() { }
-
-  signin = (event) => {
+  const signin = (event) => {
     event.preventDefault();
     axios
       .post("/login", {
-        username: this.state.userTextField.value,
-        password: this.state.passTextField.value,
+        username,
+        password,
       })
       .then((response) => {
         const expiresIn = response.data.data.expires_in;
@@ -94,151 +59,120 @@ class AllureDockerSignIn extends Component {
           localStorage.setItem("expirationDate", expirationDate);
         }
         setRoles(response.data.data.roles);
-        this.props.isLoginRequired();
-        this.props.history.replace("/");
+        props.isLoginRequired();
+        navigate("/", { replace: true });
       })
       .catch((error) => {
-        this.showError(error.message);
+        setErrorMessage(error.message);
       });
   };
 
-  handleUserTextFieldChange = (event) => {
-    const userTextField = { ...this.state.userTextField };
-    userTextField.value = event.target.value;
-    this.setState({ userTextField: userTextField });
-  };
-
-  handlePassTextFieldChange = (event) => {
-    const passTextField = { ...this.state.passTextField };
-    passTextField.value = event.target.value;
-    this.setState({ passTextField: passTextField });
-  };
-
-  handleClickShowPassword = () => {
-    const passTextField = { ...this.state.passTextField };
-    passTextField.show = !this.state.passTextField.show;
-    this.setState({ passTextField: passTextField });
-  };
-
-  handleMouseDownPassword = (event) => {
+  const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  showError = (errorMessage) => {
-    this.setState({ error: true, errorMessage });
-  };
-
-  resetStates = () => {
-    this.setState(this.initialState);
-  };
-
-  goToHome = () => {
-    redirectRoot();
-  };
-
-  render() {
-    const { classes } = this.props;
-
-    let isHomeAnOption;
-    if (this.props.isHomeAnOption) {
-      isHomeAnOption = (
-        <IconButton color="inherit" onClick={this.goToHome}>
-          <HomeIcon />
-        </IconButton>
-      );
-    }
-
-    return (
-      <div>
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={classes.paper}>
-            <div align="center">
-              <img src={allure} alt="allure" height="100" />
-              <img src={docker} alt="docker" height="100" />
-            </div>
-            <Typography component="h1" variant="h5" align="center">
-              Allure Docker Service UI
-            </Typography>
-            <form className={classes.form} noValidate onSubmit={this.signin}>
-              <TextField
-                error={this.state.userTextField.error}
-                value={this.state.userTextField.value}
-                onChange={this.handleUserTextFieldChange}
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="user"
-                label="User"
-                name="user"
-                autoComplete="user"
-                autoFocus
-                InputProps={{
+  return (
+    <div>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            mt: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <div align="center">
+            <img src={allure} alt="allure" height="100" />
+            <img src={docker} alt="docker" height="100" />
+          </div>
+          <Typography component="h1" variant="h5" align="center">
+            Allure Docker Service UI
+          </Typography>
+          <Box
+            component="form"
+            sx={{ width: "100%", mt: 1 }}
+            noValidate
+            onSubmit={signin}
+          >
+            <TextField
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="user"
+              label="User"
+              name="user"
+              autoComplete="user"
+              autoFocus
+              slotProps={{
+                input: {
                   startAdornment: (
                     <InputAdornment position="start">
                       <AccountCircle />
                     </InputAdornment>
                   ),
-                }}
-              />
-              <TextField
-                error={this.state.passTextField.error}
-                value={this.state.passTextField.value}
-                type={this.state.passTextField.show ? "text" : "password"}
-                onChange={this.handlePassTextFieldChange}
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                id="password"
-                autoComplete="current-password"
-                InputProps={{
+                },
+              }}
+            />
+            <TextField
+              value={password}
+              type={showPassword ? "text" : "password"}
+              onChange={(event) => setPassword(event.target.value)}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              id="password"
+              autoComplete="current-password"
+              slotProps={{
+                input: {
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
                         aria-label="toggle password visibility"
-                        onClick={this.handleClickShowPassword}
-                        onMouseDown={this.handleMouseDownPassword}
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        onMouseDown={handleMouseDownPassword}
                       >
-                        {this.state.passTextField.show ? (
-                          <Visibility />
-                        ) : (
-                            <VisibilityOff />
-                          )}
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   ),
-                }}
-              />
+                },
+              }}
+            />
 
-              <FormHelperText className={classes.error}>
-                {this.state.errorMessage}
-              </FormHelperText>
+            <FormHelperText sx={{ color: "secondary.main" }}>
+              {errorMessage}
+            </FormHelperText>
 
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="secondary"
-                className={classes.submit}
-              >
-                Sign In
-              </Button>
-            </form>
-            {isHomeAnOption}
-          </div>
-          <Box mt={8}>
-            <Copyright />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="secondary"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
           </Box>
-        </Container>
-      </div>
-    );
-  }
+          {props.isHomeAnOption ? (
+            <IconButton color="inherit" onClick={redirectRoot}>
+              <HomeIcon />
+            </IconButton>
+          ) : null}
+        </Box>
+        <Box sx={{ mt: 8 }}>
+          <Copyright />
+        </Box>
+      </Container>
+    </div>
+  );
 }
 
-export default withStyles(styles, { withTheme: true })(
-  withRouter(AllureDockerSignIn)
-);
+export default AllureDockerSignIn;

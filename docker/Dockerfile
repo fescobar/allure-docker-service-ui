@@ -1,13 +1,13 @@
 ######
-FROM node:12.18.3-buster-slim AS builder
+FROM node:24-bookworm-slim AS builder
 ENV ROOT=/code
 WORKDIR $ROOT
 COPY ui $ROOT
-RUN npm install && \
+RUN npm ci && \
     npm run build
 
 ######
-FROM node:12.18.3-buster-slim
+FROM node:24-bookworm-slim
 ARG BUILD_DATE
 ARG VERSION
 ARG VCS_REF
@@ -23,7 +23,8 @@ LABEL org.label-schema.build-date=${BUILD_DATE} \
     authors="Frank Escobar <fescobar.systems@gmail.com>"
 
 RUN apt-get update && \
-    apt install curl -y
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV ROOT=/app
 
@@ -36,7 +37,7 @@ COPY --chown=node:node ui/generate_env_file.sh $ROOT
 RUN echo "${VERSION}" > $ROOT/ui/ui_version && \
     echo "ALLURE_DOCKER_SERVICE_UI_VERSION:" $(cat $ROOT/ui/ui_version) && \
     chmod +x $ROOT/*.sh && \
-    npm install --prefix $ROOT/ui
+    npm ci --prefix $ROOT/ui --omit=dev
 
 RUN chown -R node:node $ROOT
 
@@ -48,4 +49,4 @@ HEALTHCHECK --interval=10s --timeout=60s --retries=3 \
 
 USER node
 
-CMD $ROOT/run.sh
+CMD ["/app/run.sh"]
